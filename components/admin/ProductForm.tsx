@@ -116,6 +116,7 @@ export default function ProductForm({ productId }: { productId?: string }) {
   const [loading, setLoading] = useState(false);
   const [categories] = useState(CATEGORIES);
   const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
 
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
@@ -188,6 +189,7 @@ export default function ProductForm({ productId }: { productId?: string }) {
     e.preventDefault();
     setLoading(true);
     setError('');
+    setSuccess('');
 
     if (categoryId && !isJacketCollections && !subcategoryId) {
       setError('Please select a subcategory');
@@ -195,10 +197,28 @@ export default function ProductForm({ productId }: { productId?: string }) {
       return;
     }
     try {
-      const uploadedAssetId = await uploadImageIfNeeded();
+      // STEP 1 - Get default tax category
+      const taxRes = await adminClientFetch<{ taxCategories: { items: any[] } }>(`
+        query { taxCategories { items { id name isDefault } } }
+      `);
+      const defaultTaxCat = taxRes.taxCategories.items.find((t: any) => t.isDefault) || taxRes.taxCategories.items[0];
+      const taxCategoryId = defaultTaxCat?.id;
+      if (!taxCategoryId) throw new Error("No default tax category found in Vendure API.");
+
       const slug = slugify(name);
+      const uploadedAssetId = await uploadImageIfNeeded();
+
+      if (uploadedAssetId) {
+        // STEP 3 - Assign asset to channel
+        await adminClientFetch(`
+          mutation AssignAssets($assetIds: [ID!]!) {
+            assignAssetsToChannel(input: { assetIds: $assetIds, channelId: "1" }) { id }
+          }
+        `, { assetIds: [uploadedAssetId] });
+      }
 
       if (!editing) {
+        // STEP 2 - Create product
         const createRes = await adminClientFetch<{ createProduct: { id: string } }>(CREATE_PRODUCT, {
           input: {
             enabled: true,
@@ -207,37 +227,65 @@ export default function ProductForm({ productId }: { productId?: string }) {
             translations: [{ languageCode: 'en', name, slug, description }],
           },
         });
-
         const newProductId = createRes.createProduct.id;
+
+        // STEP 4 - Create variant
         const variantInputs = (sizes.length ? sizes : ['Default']).map((size) => ({
           productId: newProductId,
-          enabled: true,
+          taxCategoryId,
           sku: `${slug}-${size.toLowerCase()}`,
-          price: Math.round(price * 100),
+          price: 0,
           stockOnHand: stock,
+          trackInventory: false,
           featuredAssetId: uploadedAssetId,
           assetIds: uploadedAssetId ? [uploadedAssetId] : [],
           translations: [{ languageCode: 'en', name: `${name} ${size}` }],
         }));
-        const variantsRes = await adminClientFetch<{ createProductVariants: { id: string }[] }>(
+        
+        await adminClientFetch<{ createProductVariants: { id: string }[] }>(
           CREATE_VARIANTS,
           { input: variantInputs },
         );
-        const variantIds = variantsRes.createProductVariants.map((v) => v.id);
 
-        await new Promise((r) => setTimeout(r, 300));
-        await assignProductToDefaultChannel(newProductId, variantIds);
-        await new Promise((r) => setTimeout(r, 500));
+        // STEP 6.1 - Assign product to channel
+        await adminClientFetch(`
+          mutation AssignToChannel($productId: ID!) {
+            assignProductsToChannel(input: { productIds: [$productId], channelId: "1" }) { id }
+          }
+        `, { productId: newProductId });
+
+        // STEP 5 - Find collection ID
+        const targetSlug = subcategoryId || categoryId;
+        const colRes = await adminClientFetch<{ collection: { id: string, name: string } }>(`
+          query GetCollectionBySlug($slug: String!) { collection(slug: $slug) { id name } }
+        `, { slug: targetSlug });
         
-        const finalCategoryId = await resolveCollectionId(categoryId);
-        const finalSubcategoryId = subcategoryId ? await resolveCollectionId(subcategoryId) : '';
+        const realCollectionId = colRes.collection?.id;
+        if (!realCollectionId) throw new Error(`Could not find real collection ID for slug: ${targetSlug}`);
 
-        if (isJacketCollections) {
-          await assignProductToCollection(newProductId, finalCategoryId);
-        } else if (finalSubcategoryId) {
-          await assignProductToCollection(newProductId, finalSubcategoryId, finalCategoryId);
-        }
+        // STEP 6.2 - Assign product to collection via filter
+        const filterValue = `["${newProductId}"]`;
+        await adminClientFetch(`
+          mutation AssignToCollection($collectionId: ID!, $filterValue: String!) {
+            updateCollection(input: {
+              id: $collectionId
+              filters: [{
+                code: "manually-assigned-filter"
+                arguments: [{ name: "productIds", value: $filterValue }]
+              }]
+            }) { id }
+          }
+        `, { collectionId: realCollectionId, filterValue });
+
+        // STEP 7 - Show success message
+        setSuccess(`Product saved successfully! It will appear on the website in ${selectedCategory?.name} > ${colRes.collection?.name || ''} within a few seconds.`);
+        setTimeout(() => {
+          router.push('/admin/products');
+          router.refresh();
+        }, 2000);
+
       } else {
+        // Edit flow (condensed)
         await adminClientFetch(UPDATE_PRODUCT, {
           input: {
             id: productId,
@@ -250,8 +298,9 @@ export default function ProductForm({ productId }: { productId?: string }) {
           await adminClientFetch(UPDATE_VARIANT, {
             input: {
               id: variantId,
-              price: Math.round(price * 100),
+              price: 0,
               stockOnHand: stock,
+              trackInventory: false,
               featuredAssetId: uploadedAssetId,
               assetIds: uploadedAssetId ? [uploadedAssetId] : [],
               sku: `${slug}-${(sizes[0] ?? 'default').toLowerCase()}`,
@@ -259,19 +308,37 @@ export default function ProductForm({ productId }: { productId?: string }) {
           });
         }
         
-        const finalCategoryIdEdit = await resolveCollectionId(categoryId);
-        const finalSubcategoryIdEdit = subcategoryId ? await resolveCollectionId(subcategoryId) : '';
-
-        if (isJacketCollections) {
-          await assignProductToCollection(productId!, finalCategoryIdEdit);
-        } else if (finalSubcategoryIdEdit) {
-          await assignProductToCollection(productId!, finalSubcategoryIdEdit, finalCategoryIdEdit);
+        const targetSlug = subcategoryId || categoryId;
+        const colRes = await adminClientFetch<{ collection: { id: string, name: string } }>(`
+          query GetCollectionBySlug($slug: String!) { collection(slug: $slug) { id name } }
+        `, { slug: targetSlug });
+        
+        const realCollectionId = colRes.collection?.id;
+        if (realCollectionId) {
+          const filterValue = `["${productId}"]`;
+          await adminClientFetch(`
+            mutation AssignToCollection($collectionId: ID!, $filterValue: String!) {
+              updateCollection(input: {
+                id: $collectionId
+                filters: [{
+                  code: "manually-assigned-filter"
+                  arguments: [{ name: "productIds", value: $filterValue }]
+                }]
+              }) { id }
+            }
+          `, { collectionId: realCollectionId, filterValue });
         }
+
+        setSuccess(`Product updated successfully!`);
+        setTimeout(() => {
+          router.push('/admin/products');
+          router.refresh();
+        }, 2000);
       }
-      router.push('/admin/products');
-      router.refresh();
     } catch (err) {
-      setError((err as Error).message);
+      // STEP 8 - Exact error message in red box
+      console.error(err);
+      setError(err instanceof Error ? err.message : JSON.stringify(err));
     } finally {
       setLoading(false);
     }
@@ -282,6 +349,20 @@ export default function ProductForm({ productId }: { productId?: string }) {
       <h1 className="text-2xl font-semibold normal-case tracking-normal">
         {editing ? 'Edit Product' : 'Add New Product'}
       </h1>
+      
+      {error && (
+        <div className="bg-red-50 border border-red-200 text-red-700 p-4 rounded">
+          <p className="font-semibold mb-1">Error saving product:</p>
+          <pre className="text-sm whitespace-pre-wrap font-mono">{error}</pre>
+        </div>
+      )}
+      
+      {success && (
+        <div className="bg-green-50 border border-green-200 text-green-700 p-4 rounded">
+          <p className="font-semibold">{success}</p>
+        </div>
+      )}
+
       <div className="grid md:grid-cols-2 gap-4">
         <div className="space-y-1">
           <label className="text-sm font-medium">Product Name</label>
@@ -360,7 +441,6 @@ export default function ProductForm({ productId }: { productId?: string }) {
         </div>
       </div>
 
-      {error ? <p className="text-sm text-red-600">{error}</p> : null}
       <div className="flex gap-2">
         <button type="submit" disabled={loading} className="rounded bg-black text-white px-4 py-2 disabled:opacity-60">
           {loading ? 'Saving...' : 'Save Product'}
