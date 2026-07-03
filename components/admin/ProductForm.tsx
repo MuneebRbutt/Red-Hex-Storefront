@@ -197,18 +197,6 @@ export default function ProductForm({ productId }: { productId?: string }) {
       return;
     }
     try {
-      // STEP 1 - Get default tax category
-      let taxCategoryId: string | undefined;
-      try {
-        const taxRes = await adminClientFetch<{ taxCategories: { items: any[] } }>(`
-          query { taxCategories { items { id name isDefault } } }
-        `);
-        const defaultTaxCat = taxRes?.taxCategories?.items?.find((t: any) => t.isDefault) || taxRes?.taxCategories?.items?.[0];
-        taxCategoryId = defaultTaxCat?.id;
-      } catch (err) {
-        console.warn('Could not fetch tax categories:', err);
-      }
-
       const slug = slugify(name);
       const uploadedAssetId = await uploadImageIfNeeded();
 
@@ -236,13 +224,10 @@ export default function ProductForm({ productId }: { productId?: string }) {
         // STEP 4 - Create variant
         const variantInputs = (sizes.length ? sizes : ['Default']).map((size) => ({
           productId: newProductId,
-          ...(taxCategoryId ? { taxCategoryId } : {}),
           sku: `${slug}-${size.toLowerCase()}`,
           price: 0,
           stockOnHand: stock,
           trackInventory: 'FALSE',
-          outOfStockThreshold: 0,
-          useGlobalOutOfStockThreshold: true,
           featuredAssetId: uploadedAssetId,
           assetIds: uploadedAssetId ? [uploadedAssetId] : [],
           translations: [{ languageCode: 'en', name: `${name} ${size}` }],
@@ -307,8 +292,6 @@ export default function ProductForm({ productId }: { productId?: string }) {
               price: 0,
               stockOnHand: stock,
               trackInventory: 'FALSE',
-              outOfStockThreshold: 0,
-              useGlobalOutOfStockThreshold: true,
               featuredAssetId: uploadedAssetId,
               assetIds: uploadedAssetId ? [uploadedAssetId] : [],
               sku: `${slug}-${(sizes[0] ?? 'default').toLowerCase()}`,
