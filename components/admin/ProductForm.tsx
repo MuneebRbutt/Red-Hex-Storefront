@@ -4,20 +4,19 @@ import { FormEvent, useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { assignProductToCollection, assignProductToDefaultChannel } from '@/lib/admin/assignProductToCollection';
 import { adminClientFetch } from '@/lib/admin/client';
-import {
-  type AdminCollection,
-  getMainCategories,
-  getSubcategories,
-} from '@/lib/admin/collections';
+import { type AdminCollection } from '@/lib/admin/collections';
 
 const COLLECTIONS_QUERY = `
-query AdminCollectionsForForm {
-  collections(options: { take: 200, sort: { name: ASC } }) {
+query GetCollections {
+  collections(options: { take: 100 }) {
     items {
       id
       name
       slug
-      parent { id name slug }
+      parent {
+        id
+        name
+      }
     }
   }
 }
@@ -86,11 +85,16 @@ export default function ProductForm({ productId }: { productId?: string }) {
   const [variantId, setVariantId] = useState<string>('');
   const [assetId, setAssetId] = useState<string>('');
 
-  const mainCategories = useMemo(() => getMainCategories(collections), [collections]);
-  const subcategories = useMemo(
-    () => getSubcategories(collections, categoryId),
-    [collections, categoryId],
-  );
+  const mainCategories = useMemo(() => {
+    return collections.filter(c => c?.parent?.name === '__root_collection__');
+  }, [collections]);
+
+  const subcategories = useMemo(() => {
+    return collections.filter((c) => c?.parent?.id === categoryId);
+  }, [collections, categoryId]);
+
+  const selectedCategory = mainCategories.find(c => c.id === categoryId);
+  const isJacketCollections = selectedCategory?.name === 'Jacket Collections';
 
   useEffect(() => {
     adminClientFetch<{ collections: { items: AdminCollection[] } }>(COLLECTIONS_QUERY)
@@ -143,6 +147,12 @@ export default function ProductForm({ productId }: { productId?: string }) {
     e.preventDefault();
     setLoading(true);
     setError('');
+
+    if (categoryId && !isJacketCollections && !subcategoryId) {
+      setError('Please select a subcategory');
+      setLoading(false);
+      return;
+    }
     try {
       const uploadedAssetId = await uploadImageIfNeeded();
       const slug = slugify(name);
@@ -177,7 +187,9 @@ export default function ProductForm({ productId }: { productId?: string }) {
         await new Promise((r) => setTimeout(r, 300));
         await assignProductToDefaultChannel(newProductId, variantIds);
         await new Promise((r) => setTimeout(r, 500));
-        if (subcategoryId) {
+        if (isJacketCollections) {
+          await assignProductToCollection(newProductId, categoryId);
+        } else if (subcategoryId) {
           await assignProductToCollection(newProductId, subcategoryId, categoryId);
         }
       } else {
@@ -201,7 +213,9 @@ export default function ProductForm({ productId }: { productId?: string }) {
             },
           });
         }
-        if (subcategoryId) {
+        if (isJacketCollections) {
+          await assignProductToCollection(productId!, categoryId);
+        } else if (subcategoryId) {
           await assignProductToCollection(productId!, subcategoryId, categoryId);
         }
       }
@@ -241,21 +255,30 @@ export default function ProductForm({ productId }: { productId?: string }) {
             ))}
           </select>
         </div>
-        <div className="space-y-1">
-          <label className="text-sm font-medium">Subcategory</label>
-          <select
-            className="w-full rounded border px-3 py-2"
-            value={subcategoryId}
-            onChange={(e) => setSubcategoryId(e.target.value)}
-            disabled={!categoryId}
-            required
-          >
-            <option value="">Select subcategory</option>
-            {subcategories.map((c) => (
-              <option key={c.id} value={c.id}>{c.name}</option>
-            ))}
-          </select>
-        </div>
+        {!isJacketCollections ? (
+          <div className="space-y-1">
+            <label className="text-sm font-medium">Subcategory</label>
+            <select
+              className="w-full rounded border px-3 py-2"
+              value={subcategoryId}
+              onChange={(e) => setSubcategoryId(e.target.value)}
+              disabled={!categoryId}
+              required
+            >
+              <option value="">Select subcategory</option>
+              {subcategories.map((c) => (
+                <option key={c.id} value={c.id}>{c.name}</option>
+              ))}
+            </select>
+          </div>
+        ) : (
+          <div className="space-y-1">
+            <label className="text-sm font-medium">Subcategory</label>
+            <div className="w-full rounded border px-3 py-2 bg-gray-50 text-sm text-gray-500">
+              Product will be added directly to Jacket Collections
+            </div>
+          </div>
+        )}
         <div className="space-y-1">
           <label className="text-sm font-medium">Stock quantity</label>
           <input type="number" className="w-full rounded border px-3 py-2" value={stock} onChange={(e) => setStock(Number(e.target.value))} required />
