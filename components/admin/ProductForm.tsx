@@ -198,12 +198,16 @@ export default function ProductForm({ productId }: { productId?: string }) {
     }
     try {
       // STEP 1 - Get default tax category
-      const taxRes = await adminClientFetch<{ taxCategories: { items: any[] } }>(`
-        query { taxCategories { items { id name isDefault } } }
-      `);
-      const defaultTaxCat = taxRes.taxCategories.items.find((t: any) => t.isDefault) || taxRes.taxCategories.items[0];
-      const taxCategoryId = defaultTaxCat?.id;
-      if (!taxCategoryId) throw new Error("No default tax category found in Vendure API.");
+      let taxCategoryId: string | undefined;
+      try {
+        const taxRes = await adminClientFetch<{ taxCategories: { items: any[] } }>(`
+          query { taxCategories { items { id name isDefault } } }
+        `);
+        const defaultTaxCat = taxRes?.taxCategories?.items?.find((t: any) => t.isDefault) || taxRes?.taxCategories?.items?.[0];
+        taxCategoryId = defaultTaxCat?.id;
+      } catch (err) {
+        console.warn('Could not fetch tax categories:', err);
+      }
 
       const slug = slugify(name);
       const uploadedAssetId = await uploadImageIfNeeded();
@@ -232,7 +236,7 @@ export default function ProductForm({ productId }: { productId?: string }) {
         // STEP 4 - Create variant
         const variantInputs = (sizes.length ? sizes : ['Default']).map((size) => ({
           productId: newProductId,
-          taxCategoryId,
+          ...(taxCategoryId ? { taxCategoryId } : {}),
           sku: `${slug}-${size.toLowerCase()}`,
           price: 0,
           stockOnHand: stock,
