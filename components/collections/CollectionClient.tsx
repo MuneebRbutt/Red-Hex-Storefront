@@ -7,34 +7,6 @@ import Link from 'next/link';
 import Footer from '@/components/layout/Footer';
 
 // ─────────────────────────────────────────────────────────────────────────────
-// GraphQL Queries
-// ─────────────────────────────────────────────────────────────────────────────
-const GET_COLLECTION = gql`
-  query GetCollectionProducts($slug: String!) {
-    collection(slug: $slug) {
-      id
-      name
-      description
-      productVariants(options: { take: 100 }) {
-        totalItems
-        items {
-          id
-          name
-          priceWithTax
-          product {
-            id
-            name
-            slug
-            featuredAsset { preview }
-            assets { preview }
-          }
-        }
-      }
-    }
-  }
-`;
-
-// ─────────────────────────────────────────────────────────────────────────────
 // Category configurations and subcategory mapping
 // ─────────────────────────────────────────────────────────────────────────────
 const CATEGORY_MAP: Record<string, { label: string; subs: string[] }> = {
@@ -99,13 +71,17 @@ function formatPrice(cents: number) {
   return `$${(cents / 100).toFixed(2)}`;
 }
 
-export default function CollectionClient({ slug }: { slug: string }) {
-  // Apollo fetch for collection
-  const { data, loading, error } = useQuery(GET_COLLECTION, {
-    variables: { slug },
-    fetchPolicy: 'network-only',
-  });
-
+export default function CollectionClient({ 
+  slug, 
+  initialVariants = [],
+  serverCollectionName = '',
+  serverCollectionDesc = ''
+}: { 
+  slug: string; 
+  initialVariants?: any[];
+  serverCollectionName?: string;
+  serverCollectionDesc?: string;
+}) {
   const [priceRange, setPriceRange] = useState<string>('all');
   const [currentPage, setCurrentPage] = useState<number>(1);
   const itemsPerPage = 8;
@@ -118,11 +94,10 @@ export default function CollectionClient({ slug }: { slug: string }) {
   const parentLabel = isSubcategory ? subcatInfo.parentLabel : (CATEGORY_MAP[slug]?.label || slug.replace(/-/g, ' ').toUpperCase());
   const currentLabel = isSubcategory ? subcatInfo.label : parentLabel;
 
-  const collectionName = (data as any)?.collection?.name || currentLabel;
-  const collectionDesc = (data as any)?.collection?.description || `Premium quality gear and apparel from our ${currentLabel} collection.`;
+  const collectionName = serverCollectionName || currentLabel;
+  const collectionDesc = serverCollectionDesc || `Premium quality gear and apparel from our ${currentLabel} collection.`;
 
-  const rawVariants = (data as any)?.collection?.productVariants?.items || [];
-  const variants = rawVariants;
+  const variants = initialVariants;
 
   // Price filtering logic
   const filteredVariants = useMemo(() => {
@@ -231,12 +206,7 @@ export default function CollectionClient({ slug }: { slug: string }) {
 
           {/* ─ PRODUCT GRID ─ */}
           <div>
-            {loading ? (
-              <div style={statusMessageStyle}>
-                <div style={inlineSpinnerStyle} />
-                <p style={{ marginTop: '1rem', color: 'rgba(255,255,255,0.4)' }}>Loading collection...</p>
-              </div>
-            ) : paginatedVariants.length === 0 ? (
+            {paginatedVariants.length === 0 ? (
               /* Coming Soon styled message */
               <div style={comingSoonStyle}>
                 <span style={{ fontSize: '2.5rem', marginBottom: '0.5rem' }}>📢</span>
