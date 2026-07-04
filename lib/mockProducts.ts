@@ -491,6 +491,90 @@ export const mockProducts: MockProduct[] = [
     subcategory: "construction-suits",
     images: ["https://res.cloudinary.com/ng5enocm/image/upload/v1783193983/workwear_construction_suit_2.jpg_gvbrm7.jpg"],
     sizes: ['M', 'L', 'XL']
+  },
+  {
+    id: "gs-01",
+    name: "Gym Socks 01",
+    slug: "gym-socks-01",
+    price: 0,
+    shortDescription: "Superior comfort gym socks",
+    description: "These gym socks are designed to provide superior comfort and support during workouts and everyday activities. Made from soft, breathable fabric, they help keep feet dry while delivering a secure and comfortable fit throughout the day.",
+    category: "gymwear-activewear",
+    subcategory: "gym-socks",
+    images: ["https://res.cloudinary.com/ng5enocm/image/upload/v1783195750/gym_socks_1.jpg_hibvbq.jpg"],
+    sizes: ['M', 'L', 'XL']
+  },
+  {
+    id: "gs-02",
+    name: "Gym Socks 02",
+    slug: "gym-socks-02",
+    price: 0,
+    shortDescription: "Cushioned training gym socks",
+    description: "These gym socks combine durability with excellent cushioning to enhance comfort during training sessions. The breathable material promotes airflow, making them ideal for gym workouts, running, and other active routines.",
+    category: "gymwear-activewear",
+    subcategory: "gym-socks",
+    images: ["https://res.cloudinary.com/ng5enocm/image/upload/v1783195748/gym_socks_7.jpg_crus5k.jpg"],
+    sizes: ['M', 'L', 'XL']
+  },
+  {
+    id: "gs-03",
+    name: "Gym Socks 03",
+    slug: "gym-socks-03",
+    price: 0,
+    shortDescription: "Moisture-wicking gym socks",
+    description: "Crafted from high-quality fabric, these gym socks offer long-lasting performance and a comfortable fit. Their moisture-wicking properties help keep feet fresh, while the flexible design supports unrestricted movement.",
+    category: "gymwear-activewear",
+    subcategory: "gym-socks",
+    images: ["https://res.cloudinary.com/ng5enocm/image/upload/v1783195746/gym_socks_5.jpg_mrlndj.jpg"],
+    sizes: ['M', 'L', 'XL']
+  },
+  {
+    id: "gs-04",
+    name: "Gym Socks 04",
+    slug: "gym-socks-04",
+    price: 0,
+    shortDescription: "Lightweight active gym socks",
+    description: "These gym socks are designed for active individuals who value both comfort and durability. The lightweight construction and soft texture provide all-day wearability, making them suitable for workouts, sports, and casual use.",
+    category: "gymwear-activewear",
+    subcategory: "gym-socks",
+    images: ["https://res.cloudinary.com/ng5enocm/image/upload/v1783195746/gym_socks_6.jpg_swqego.jpg"],
+    sizes: ['M', 'L', 'XL']
+  },
+  {
+    id: "gs-05",
+    name: "Gym Socks 05",
+    slug: "gym-socks-05",
+    price: 0,
+    shortDescription: "Supportive fit gym socks",
+    description: "These gym socks provide reliable comfort with a snug and supportive fit. The breathable fabric helps reduce moisture buildup, ensuring a fresh and comfortable experience during intense physical activities.",
+    category: "gymwear-activewear",
+    subcategory: "gym-socks",
+    images: ["https://res.cloudinary.com/ng5enocm/image/upload/v1783195743/gym_socks_4.jpg_u4cla9.jpg"],
+    sizes: ['M', 'L', 'XL']
+  },
+  {
+    id: "gs-06",
+    name: "Gym Socks 06",
+    slug: "gym-socks-06",
+    price: 0,
+    shortDescription: "Everyday performance gym socks",
+    description: "Built for everyday performance, these gym socks feature premium materials that offer durability, flexibility, and lasting comfort. They are an excellent choice for gym training, walking, running, and other fitness activities.",
+    category: "gymwear-activewear",
+    subcategory: "gym-socks",
+    images: ["https://res.cloudinary.com/ng5enocm/image/upload/v1783195742/gym_socks_3.jpg_klvxc6.jpg"],
+    sizes: ['M', 'L', 'XL']
+  },
+  {
+    id: "gs-07",
+    name: "Gym Socks 07",
+    slug: "gym-socks-07",
+    price: 0,
+    shortDescription: "Maximum comfort gym socks",
+    description: "These gym socks are engineered to deliver maximum comfort and dependable performance throughout every workout. Their breathable construction and secure fit make them ideal for athletes, fitness enthusiasts, and daily wear.",
+    category: "gymwear-activewear",
+    subcategory: "gym-socks",
+    images: ["https://res.cloudinary.com/ng5enocm/image/upload/v1783195742/gym_socks_2.jpg_h0dkpa.jpg"],
+    sizes: ['M', 'L', 'XL']
   }
 ];
 
