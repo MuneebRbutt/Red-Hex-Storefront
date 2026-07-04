@@ -191,6 +191,138 @@ export const mockProducts: MockProduct[] = [
     subcategory: "safety-vests",
     images: ["https://res.cloudinary.com/ng5enocm/image/upload/v1783167871/safety_vest_10.jpg_iozz20.jpg"],
     sizes: ['M', 'L', 'XL']
+  },
+  {
+    id: "cs-01",
+    name: "Construction Suit 01",
+    slug: "construction-suit-01",
+    price: 0,
+    shortDescription: "Reliable construction suit",
+    description: "This construction suit is designed to provide reliable protection and all-day comfort in demanding work environments. Manufactured from durable, breathable fabric, it offers excellent freedom of movement while standing up to the rigors of construction, industrial, and maintenance tasks.",
+    category: "safety-work-wear",
+    subcategory: "construction-suits",
+    images: ["https://res.cloudinary.com/ng5enocm/image/upload/v1783171243/safety_jackets_1_xzuss5.jpg"],
+    sizes: ['M', 'L', 'XL']
+  },
+  {
+    id: "cs-02",
+    name: "Construction Suit 02",
+    slug: "construction-suit-02",
+    price: 0,
+    shortDescription: "Durable construction suit",
+    description: "Built for professional use, this construction suit combines durability with practical comfort. Its high-quality stitching and resilient fabric make it suitable for long working hours in construction sites, workshops, factories, and engineering projects.",
+    category: "safety-work-wear",
+    subcategory: "construction-suits",
+    images: ["https://res.cloudinary.com/ng5enocm/image/upload/v1783171242/safety_jackets_2_vsqhxf.jpg"],
+    sizes: ['M', 'L', 'XL']
+  },
+  {
+    id: "cs-03",
+    name: "Construction Suit 03",
+    slug: "construction-suit-03",
+    price: 0,
+    shortDescription: "Dependable performance suit",
+    description: "This construction suit is crafted to deliver dependable performance in challenging conditions. The lightweight yet durable material helps workers stay comfortable while providing the protection required for daily industrial operations.",
+    category: "safety-work-wear",
+    subcategory: "construction-suits",
+    images: ["https://res.cloudinary.com/ng5enocm/image/upload/v1783171242/safety_jackets_3_bdmelp.jpg"],
+    sizes: ['M', 'L', 'XL']
+  },
+  {
+    id: "cs-04",
+    name: "Construction Suit 04",
+    slug: "construction-suit-04",
+    price: 0,
+    shortDescription: "Comfortable fit suit",
+    description: "Designed for demanding workplaces, this construction suit offers a comfortable fit without compromising durability. The premium fabric ensures long-lasting wear, making it an excellent choice for construction, manufacturing, and maintenance professionals.",
+    category: "safety-work-wear",
+    subcategory: "construction-suits",
+    images: ["https://res.cloudinary.com/ng5enocm/image/upload/v1783171240/safety_jackets_5_nqjpbq.jpg"],
+    sizes: ['M', 'L', 'XL']
+  },
+  {
+    id: "cs-05",
+    name: "Construction Suit 05",
+    slug: "construction-suit-05",
+    price: 0,
+    shortDescription: "Flexible construction suit",
+    description: "This construction suit provides a perfect balance of strength, flexibility, and comfort. Engineered for everyday industrial use, it allows unrestricted movement while maintaining durability throughout extended work shifts.",
+    category: "safety-work-wear",
+    subcategory: "construction-suits",
+    images: ["https://res.cloudinary.com/ng5enocm/image/upload/v1783171241/safety_jackets_4_pvussu.jpg"],
+    sizes: ['M', 'L', 'XL']
+  },
+  {
+    id: "cs-06",
+    name: "Construction Suit 06",
+    slug: "construction-suit-06",
+    price: 0,
+    shortDescription: "Tough environment suit",
+    description: "Manufactured from high-quality materials, this construction suit is built to withstand tough working environments. Its breathable fabric and reinforced stitching provide lasting comfort and dependable performance on the job.",
+    category: "safety-work-wear",
+    subcategory: "construction-suits",
+    images: ["https://res.cloudinary.com/ng5enocm/image/upload/v1783171239/safety_jackets_6_xpkkxh.jpg"],
+    sizes: ['M', 'L', 'XL']
+  },
+  {
+    id: "cs-07",
+    name: "Construction Suit 07",
+    slug: "construction-suit-07",
+    price: 0,
+    shortDescription: "Everyday workwear suit",
+    description: "This construction suit is designed for professionals who require reliable workwear every day. The durable construction and comfortable fit make it suitable for construction sites, warehouses, engineering projects, and industrial facilities.",
+    category: "safety-work-wear",
+    subcategory: "construction-suits",
+    images: ["https://res.cloudinary.com/ng5enocm/image/upload/v1783171235/safety_jackets_11_ygie8u.jpg"],
+    sizes: ['M', 'L', 'XL']
+  },
+  {
+    id: "cs-08",
+    name: "Construction Suit 08",
+    slug: "construction-suit-08",
+    price: 0,
+    shortDescription: "Heavy-duty construction suit",
+    description: "Combining functionality with durability, this construction suit offers dependable protection for demanding tasks. The lightweight design ensures comfort throughout the day while maintaining the strength needed for heavy-duty work.",
+    category: "safety-work-wear",
+    subcategory: "construction-suits",
+    images: ["https://res.cloudinary.com/ng5enocm/image/upload/v1783171236/safety_jackets_10_asfufv.jpg"],
+    sizes: ['M', 'L', 'XL']
+  },
+  {
+    id: "cs-09",
+    name: "Construction Suit 09",
+    slug: "construction-suit-09",
+    price: 0,
+    shortDescription: "Maximum durability suit",
+    description: "This construction suit is engineered for maximum durability and everyday performance. The quality fabric resists wear and tear while providing the flexibility and comfort required for physically demanding jobs.",
+    category: "safety-work-wear",
+    subcategory: "construction-suits",
+    images: ["https://res.cloudinary.com/ng5enocm/image/upload/v1783171236/safety_jackets_9_vkin5l.jpg"],
+    sizes: ['M', 'L', 'XL']
+  },
+  {
+    id: "cs-10",
+    name: "Construction Suit 10",
+    slug: "construction-suit-10",
+    price: 0,
+    shortDescription: "Productivity-focused suit",
+    description: "Designed with productivity and comfort in mind, this construction suit delivers reliable performance across a variety of industrial applications. Its durable finish and practical design make it ideal for long working hours in challenging environments.",
+    category: "safety-work-wear",
+    subcategory: "construction-suits",
+    images: ["https://res.cloudinary.com/ng5enocm/image/upload/v1783171237/safety_jackets_8_urdbhl.jpg"],
+    sizes: ['M', 'L', 'XL']
+  },
+  {
+    id: "cs-11",
+    name: "Construction Suit 11",
+    slug: "construction-suit-11",
+    price: 0,
+    shortDescription: "Professional construction suit",
+    description: "This construction suit is built to meet the needs of professionals working in construction, manufacturing, and industrial settings. Featuring durable craftsmanship and a comfortable fit, it provides dependable protection and long-lasting performance for everyday use.",
+    category: "safety-work-wear",
+    subcategory: "construction-suits",
+    images: ["https://res.cloudinary.com/ng5enocm/image/upload/v1783171238/safety_jackets_7_au5jtd.jpg"],
+    sizes: ['M', 'L', 'XL']
   }
 ];
 
