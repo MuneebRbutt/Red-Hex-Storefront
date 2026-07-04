@@ -175,25 +175,7 @@ export default function ProductForm({ productId }: { productId?: string }) {
     return value.toLowerCase().trim().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
   }
 
-  async function resolveCollectionWithFallback(primarySlug: string, fallbackSlug: string, collectionName: string): Promise<string> {
-    const querySlug = `
-      query GetCollection($slug: String!) {
-        collection(slug: $slug) {
-          id
-          name
-          slug
-        }
-      }
-    `;
-    
-    let res = await adminClientFetch<{ collection: { id: string } }>(querySlug, { slug: primarySlug });
-    if (res?.collection?.id) return res.collection.id;
-
-    if (primarySlug !== fallbackSlug) {
-      res = await adminClientFetch<{ collection: { id: string } }>(querySlug, { slug: fallbackSlug });
-      if (res?.collection?.id) return res.collection.id;
-    }
-
+  async function resolveCollectionWithFallback(primarySlug: string, fallbackSlug: string): Promise<string> {
     const queryAll = `
       query {
         collections(options: { take: 100 }) {
@@ -207,34 +189,16 @@ export default function ProductForm({ productId }: { productId?: string }) {
     `;
     const allRes = await adminClientFetch<{ collections: { items: any[] } }>(queryAll);
     const items = allRes?.collections?.items || [];
-    console.log('Available collections in database:', items);
 
-    const match = items.find((i: any) => i.slug === primarySlug || i.slug === fallbackSlug);
+    const match = items.find((i: any) => i.slug === primarySlug);
     if (match?.id) return match.id;
 
-    // Collection doesn't exist at all, so let's automatically create it!
-    console.log(`Auto-creating missing collection: ${collectionName} (${primarySlug})`);
-    try {
-      const createRes = await adminClientFetch<{ createCollection: { id: string } }>(`
-        mutation CreateCollection($input: CreateCollectionInput!) {
-          createCollection(input: $input) { id }
-        }
-      `, {
-        input: {
-          translations: [{ languageCode: 'en', name: collectionName, slug: primarySlug, description: '' }]
-        }
-      });
-
-      if (createRes?.createCollection?.id) {
-        return createRes.createCollection.id;
-      }
-    } catch (err) {
-      console.error('Failed to auto-create collection:', err);
-      throw new Error(`Failed to auto-create missing collection '${collectionName}': ${err instanceof Error ? err.message : JSON.stringify(err)}`);
+    if (primarySlug !== fallbackSlug) {
+      const fallbackMatch = items.find((i: any) => i.slug === fallbackSlug);
+      if (fallbackMatch?.id) return fallbackMatch.id;
     }
 
-    const availableSlugs = items.map((i: any) => i.slug).join(', ');
-    throw new Error(`Collection not found for slug: ${primarySlug}. Available slugs: ${availableSlugs}`);
+    throw new Error(`Collection not found. Please contact admin.`);
   }
 
   async function onSubmit(e: FormEvent) {
@@ -299,8 +263,7 @@ export default function ProductForm({ productId }: { productId?: string }) {
 
         // STEP 5 - Find collection ID
         const targetSlug = subcategoryId || categoryId;
-        const targetName = subcategoryId ? (subcategories.find(s => s.id === subcategoryId)?.name || targetSlug) : (selectedCategory?.name || targetSlug);
-        const realCollectionId = await resolveCollectionWithFallback(targetSlug, categoryId, targetName);
+        const realCollectionId = await resolveCollectionWithFallback(targetSlug, categoryId);
 
         // STEP 6.2 - Assign product to collection via filter
         const filterValue = `["${newProductId}"]`;
@@ -348,8 +311,7 @@ export default function ProductForm({ productId }: { productId?: string }) {
         }
         
         const targetSlug = subcategoryId || categoryId;
-        const targetName = subcategoryId ? (subcategories.find(s => s.id === subcategoryId)?.name || targetSlug) : (selectedCategory?.name || targetSlug);
-        const realCollectionId = await resolveCollectionWithFallback(targetSlug, categoryId, targetName);
+        const realCollectionId = await resolveCollectionWithFallback(targetSlug, categoryId);
         
         if (realCollectionId) {
           const filterValue = `["${productId}"]`;
