@@ -84,13 +84,12 @@ export async function POST(req: NextRequest) {
   const isProduction = process.env.NODE_ENV === 'production';
 
   if (token) {
-    response.cookies.set(ADMIN_TOKEN_COOKIE, token, {
+    response.cookies.set('vendure-auth-token', token, {
       httpOnly: false,
       sameSite: 'lax',
-      secure: isProduction,
       path: '/',
-      maxAge: 86400,
-    });
+      maxAge: 86400
+    })
   }
 
   if (sessionPair) {

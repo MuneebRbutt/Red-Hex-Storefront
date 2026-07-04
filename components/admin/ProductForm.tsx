@@ -181,28 +181,21 @@ export default function ProductForm({ productId }: { productId?: string }) {
     const token = tokenCookie ? tokenCookie.split('=')[1] : '';
 
     // STEP 2 - Fetch all collections directly from backend
-    const collectionsRes = await fetch(
-      'https://red-hex-backend.onrender.com/admin-api',
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,
-          'vendure-auth-token': token
-        },
-        credentials: 'include',
-        body: JSON.stringify({
-          query: `{
-            collections(options: { take: 100 }) {
-              items { id name slug }
-            }
-          }`
-        })
-      }
-    );
-    const collectionsData = await collectionsRes.json();
-    const collections = collectionsData?.data?.collections?.items || [];
-    console.log('Available collections:', collections);
+    const collectionsRes = await fetch('/api/admin/graphql', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+      body: JSON.stringify({
+        query: `{
+          collections(options: { take: 100 }) {
+            items { id name slug }
+          }
+        }`
+      })
+    })
+    const collectionsData = await collectionsRes.json()
+    const collections = collectionsData?.data?.collections?.items || []
+    console.log('Collections via proxy:', collections.length, collections.map((c: any) => c.slug))
 
     // STEP 3 - Find collection ID
     const found = collections.find((c: any) => c.slug === targetSlug);
@@ -240,24 +233,20 @@ export default function ProductForm({ productId }: { productId?: string }) {
       }
 
       try {
-        const assignRes = await fetch('https://red-hex-backend.onrender.com/admin-api', {
+        const assignRes = await fetch('/api/admin/graphql', {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`,
-            'vendure-auth-token': token
-          },
+          headers: { 'Content-Type': 'application/json' },
           credentials: 'include',
           body: JSON.stringify({
             query: `
-              mutation AssignToCollection($collectionId: ID!, $productId: ID!) {
+              mutation {
                 updateCollection(input: {
-                  id: $collectionId
+                  id: "${collectionId}"
                   filters: [{
                     code: "manually-assigned-filter"
                     arguments: [{
                       name: "productIds"
-                      value: "[\\"${productId}\\"]"
+                      value: "[\\\"${productId}\\\"]"
                     }]
                   }]
                 }) {
@@ -266,15 +255,11 @@ export default function ProductForm({ productId }: { productId?: string }) {
                   productVariants { totalItems }
                 }
               }
-            `,
-            variables: {
-              collectionId: collectionId,
-              productId: productId
-            }
+            `
           })
-        });
-        const assignData = await assignRes.json();
-        console.log('Collection assignment response:', JSON.stringify(assignData, null, 2));
+        })
+        const assignData = await assignRes.json()
+        console.log('Assignment result:', JSON.stringify(assignData))
         
         if (!assignData?.errors) {
           assignedToCollection = true;
