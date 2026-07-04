@@ -133,8 +133,11 @@ export default function ProductPage({ params }: { params: { slug: string } }) {
 
   // ── Resolve product: real data first, then mock fallback ──────────────────
   const product = useMemo(() => {
-    return (data as any)?.product ?? null;
-  }, [data]);
+    if ((data as any)?.product) return (data as any).product;
+    const mockMatch = MOCK_PRODUCTS.find(p => p.slug === slug);
+    if (mockMatch) return mockToProduct(mockMatch);
+    return null;
+  }, [data, slug]);
 
   // ── Resolve images ────────────────────────────────────────────────────────
   const images: string[] = useMemo(() => {
