@@ -221,11 +221,7 @@ export default function ProductForm({ productId }: { productId?: string }) {
         }
       `, {
         input: {
-          translations: [{ languageCode: 'en', name: collectionName, slug: primarySlug, description: '' }],
-          filters: [{
-            code: "manually-assigned-filter",
-            arguments: [{ name: "productIds", value: "[]" }]
-          }]
+          translations: [{ languageCode: 'en', name: collectionName, slug: primarySlug, description: '' }]
         }
       });
 
@@ -234,6 +230,7 @@ export default function ProductForm({ productId }: { productId?: string }) {
       }
     } catch (err) {
       console.error('Failed to auto-create collection:', err);
+      throw new Error(`Failed to auto-create missing collection '${collectionName}': ${err instanceof Error ? err.message : JSON.stringify(err)}`);
     }
 
     const availableSlugs = items.map((i: any) => i.slug).join(', ');
