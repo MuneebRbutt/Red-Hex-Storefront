@@ -175,25 +175,22 @@ export default function ProductForm({ productId }: { productId?: string }) {
     return value.toLowerCase().trim().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
   }
 
-  async function resolveCollectionDirectly(primarySlug: string, fallbackSlug: string): Promise<string | null> {
-    const token = document.cookie
-      .split('; ')
-      .find(row => row.startsWith('vendure-auth-token='))
-      ?.split('=')[1];
+  async function assignToCollectionAndChannel(productId: string, targetSlug: string, categoryName: string) {
+    const cookies = document.cookie.split('; ');
+    const tokenCookie = cookies.find(c => c.startsWith('rh_admin_token='));
+    const token = tokenCookie ? tokenCookie.split('=')[1] : '';
 
-    if (!token) {
-      console.warn('No vendure-auth-token found in cookies');
-      return null;
-    }
-
-    try {
-      const res = await fetch('https://red-hex-backend.onrender.com/admin-api', {
+    // STEP 2 - Fetch all collections directly from backend
+    const collectionsRes = await fetch(
+      'https://red-hex-backend.onrender.com/admin-api',
+      {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`,
           'vendure-auth-token': token
         },
+        credentials: 'include',
         body: JSON.stringify({
           query: `{
             collections(options: { take: 100 }) {
@@ -201,24 +198,102 @@ export default function ProductForm({ productId }: { productId?: string }) {
             }
           }`
         })
-      });
-
-      const data = await res.json();
-      const collections = data?.data?.collections?.items || [];
-      console.log('Available collections from direct fetch:', collections.map((c: any) => c.slug));
-
-      const match = collections.find((c: any) => c.slug === primarySlug);
-      if (match?.id) return match.id;
-
-      if (primarySlug !== fallbackSlug) {
-        const fallbackMatch = collections.find((c: any) => c.slug === fallbackSlug);
-        if (fallbackMatch?.id) return fallbackMatch.id;
       }
-    } catch (err) {
-      console.error('Direct collection fetch failed:', err);
+    );
+    const collectionsData = await collectionsRes.json();
+    const collections = collectionsData?.data?.collections?.items || [];
+    console.log('Available collections:', collections);
+
+    // STEP 3 - Find collection ID
+    const found = collections.find((c: any) => c.slug === targetSlug);
+    const collectionId = found?.id;
+    console.log('Found collection:', found, 'for slug:', targetSlug);
+
+    let assignedToCollection = false;
+
+    // STEP 4 - Assign product to collection using correct mutation
+    if (collectionId) {
+      try {
+        const assignRes = await fetch('https://red-hex-backend.onrender.com/admin-api', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`,
+            'vendure-auth-token': token
+          },
+          credentials: 'include',
+          body: JSON.stringify({
+            query: `
+              mutation AssignToCollection($collectionId: ID!, $productId: ID!) {
+                updateCollection(input: {
+                  id: $collectionId
+                  filters: [{
+                    code: "manually-assigned-filter"
+                    arguments: [{
+                      name: "productIds"
+                      value: "[\\"${productId}\\"]"
+                    }]
+                  }]
+                }) {
+                  id
+                  name
+                  productVariants { totalItems }
+                }
+              }
+            `,
+            variables: {
+              collectionId: collectionId,
+              productId: productId
+            }
+          })
+        });
+        const assignData = await assignRes.json();
+        if (!assignData?.errors) {
+          assignedToCollection = true;
+        } else {
+          console.error('Collection assignment mutation errors:', assignData.errors);
+        }
+      } catch (err) {
+        console.error('Failed to assign to collection:', err);
+      }
     }
-    
-    return null;
+
+    // STEP 5 - Also assign product to channel
+    try {
+      await fetch('https://red-hex-backend.onrender.com/admin-api', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+          'vendure-auth-token': token
+        },
+        credentials: 'include',  
+        body: JSON.stringify({
+          query: `
+            mutation {
+              assignProductsToChannel(input: {
+                productIds: ["${productId}"]
+                channelId: "1"
+              }) { id }
+            }
+          `
+        })
+      });
+    } catch (err) {
+      console.error('Failed to assign to channel:', err);
+    }
+
+    // STEP 6 - Update success message
+    if (assignedToCollection) {
+      setSuccess(`Product saved successfully and assigned to ${categoryName}!`);
+    } else {
+      setSuccess(`Product saved but category assignment failed. Check browser console for details.`);
+    }
+
+    setTimeout(() => {
+      router.push('/admin/products');
+      router.refresh();
+    }, 2000);
   }
 
   async function onSubmit(e: FormEvent) {
@@ -274,41 +349,9 @@ export default function ProductForm({ productId }: { productId?: string }) {
           { input: variantInputs },
         );
 
-        // STEP 6.1 - Assign product to channel
-        await adminClientFetch(`
-          mutation AssignToChannel($productId: ID!) {
-            assignProductsToChannel(input: { productIds: [$productId], channelId: "1" }) { id }
-          }
-        `, { productId: newProductId });
-
-        // STEP 5 - Find collection ID
         const targetSlug = subcategoryId || categoryId;
-        const realCollectionId = await resolveCollectionDirectly(targetSlug, categoryId);
-
-        if (realCollectionId) {
-          // STEP 6.2 - Assign product to collection via filter
-          const filterValue = `["${newProductId}"]`;
-          await adminClientFetch(`
-            mutation AssignToCollection($collectionId: ID!, $filterValue: String!) {
-              updateCollection(input: {
-                id: $collectionId
-                filters: [{
-                  code: "manually-assigned-filter"
-                  arguments: [{ name: "productIds", value: $filterValue }]
-                }]
-              }) { id }
-            }
-          `, { collectionId: realCollectionId, filterValue });
-          
-          setSuccess(`Product saved successfully! It will appear on the website within a few seconds.`);
-        } else {
-          setSuccess(`Product saved! Note: category assignment pending - please assign manually in Vendure dashboard`);
-        }
-
-        setTimeout(() => {
-          router.push('/admin/products');
-          router.refresh();
-        }, 2000);
+        const targetName = subcategoryId ? (subcategories.find(s => s.id === subcategoryId)?.name || targetSlug) : (selectedCategory?.name || targetSlug);
+        await assignToCollectionAndChannel(newProductId, targetSlug, targetName);
 
       } else {
         // Edit flow (condensed)
@@ -335,31 +378,8 @@ export default function ProductForm({ productId }: { productId?: string }) {
         }
         
         const targetSlug = subcategoryId || categoryId;
-        const realCollectionId = await resolveCollectionDirectly(targetSlug, categoryId);
-        
-        if (realCollectionId) {
-          const filterValue = `["${productId}"]`;
-          await adminClientFetch(`
-            mutation AssignToCollection($collectionId: ID!, $filterValue: String!) {
-              updateCollection(input: {
-                id: $collectionId
-                filters: [{
-                  code: "manually-assigned-filter"
-                  arguments: [{ name: "productIds", value: $filterValue }]
-                }]
-              }) { id }
-            }
-          `, { collectionId: realCollectionId, filterValue });
-          
-          setSuccess(`Product updated successfully!`);
-        } else {
-          setSuccess(`Product saved! Note: category assignment pending - please assign manually in Vendure dashboard`);
-        }
-
-        setTimeout(() => {
-          router.push('/admin/products');
-          router.refresh();
-        }, 2000);
+        const targetName = subcategoryId ? (subcategories.find(s => s.id === subcategoryId)?.name || targetSlug) : (selectedCategory?.name || targetSlug);
+        await assignToCollectionAndChannel(productId, targetSlug, targetName);
       }
     } catch (err) {
       // STEP 8 - Exact error message in red box
