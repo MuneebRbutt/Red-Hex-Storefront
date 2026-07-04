@@ -213,6 +213,32 @@ export default function ProductForm({ productId }: { productId?: string }) {
 
     // STEP 4 - Assign product to collection using correct mutation
     if (collectionId) {
+      console.log('Assigning product:', productId, 'to collection:', collectionId);
+      
+      // Query available filters for debugging
+      try {
+        const filtersRes = await fetch('https://red-hex-backend.onrender.com/admin-api', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`,
+            'vendure-auth-token': token
+          },
+          body: JSON.stringify({
+            query: `{
+              collectionFilters {
+                code
+                args { name }
+              }
+            }`
+          })
+        });
+        const filtersData = await filtersRes.json();
+        console.log('Available collection filters:', JSON.stringify(filtersData, null, 2));
+      } catch (e) {
+        console.log('Failed to fetch collection filters:', e);
+      }
+
       try {
         const assignRes = await fetch('https://red-hex-backend.onrender.com/admin-api', {
           method: 'POST',
@@ -248,13 +274,17 @@ export default function ProductForm({ productId }: { productId?: string }) {
           })
         });
         const assignData = await assignRes.json();
+        console.log('Collection assignment response:', JSON.stringify(assignData, null, 2));
+        
         if (!assignData?.errors) {
           assignedToCollection = true;
         } else {
           console.error('Collection assignment mutation errors:', assignData.errors);
+          throw new Error(`Collection assignment failed: ${assignData.errors[0]?.message || JSON.stringify(assignData.errors)}`);
         }
       } catch (err) {
         console.error('Failed to assign to collection:', err);
+        throw err; // Re-throw to bubble up to UI
       }
     }
 
