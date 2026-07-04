@@ -175,30 +175,50 @@ export default function ProductForm({ productId }: { productId?: string }) {
     return value.toLowerCase().trim().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
   }
 
-  async function resolveCollectionWithFallback(primarySlug: string, fallbackSlug: string): Promise<string> {
-    const queryAll = `
-      query {
-        collections(options: { take: 100 }) {
-          items {
-            id
-            name
-            slug
-          }
-        }
-      }
-    `;
-    const allRes = await adminClientFetch<{ collections: { items: any[] } }>(queryAll);
-    const items = allRes?.collections?.items || [];
+  async function resolveCollectionDirectly(primarySlug: string, fallbackSlug: string): Promise<string | null> {
+    const token = document.cookie
+      .split('; ')
+      .find(row => row.startsWith('vendure-auth-token='))
+      ?.split('=')[1];
 
-    const match = items.find((i: any) => i.slug === primarySlug);
-    if (match?.id) return match.id;
-
-    if (primarySlug !== fallbackSlug) {
-      const fallbackMatch = items.find((i: any) => i.slug === fallbackSlug);
-      if (fallbackMatch?.id) return fallbackMatch.id;
+    if (!token) {
+      console.warn('No vendure-auth-token found in cookies');
+      return null;
     }
 
-    throw new Error(`Collection not found. Please contact admin.`);
+    try {
+      const res = await fetch('https://red-hex-backend.onrender.com/admin-api', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+          'vendure-auth-token': token
+        },
+        body: JSON.stringify({
+          query: `{
+            collections(options: { take: 100 }) {
+              items { id name slug }
+            }
+          }`
+        })
+      });
+
+      const data = await res.json();
+      const collections = data?.data?.collections?.items || [];
+      console.log('Available collections from direct fetch:', collections.map((c: any) => c.slug));
+
+      const match = collections.find((c: any) => c.slug === primarySlug);
+      if (match?.id) return match.id;
+
+      if (primarySlug !== fallbackSlug) {
+        const fallbackMatch = collections.find((c: any) => c.slug === fallbackSlug);
+        if (fallbackMatch?.id) return fallbackMatch.id;
+      }
+    } catch (err) {
+      console.error('Direct collection fetch failed:', err);
+    }
+    
+    return null;
   }
 
   async function onSubmit(e: FormEvent) {
@@ -263,24 +283,28 @@ export default function ProductForm({ productId }: { productId?: string }) {
 
         // STEP 5 - Find collection ID
         const targetSlug = subcategoryId || categoryId;
-        const realCollectionId = await resolveCollectionWithFallback(targetSlug, categoryId);
+        const realCollectionId = await resolveCollectionDirectly(targetSlug, categoryId);
 
-        // STEP 6.2 - Assign product to collection via filter
-        const filterValue = `["${newProductId}"]`;
-        await adminClientFetch(`
-          mutation AssignToCollection($collectionId: ID!, $filterValue: String!) {
-            updateCollection(input: {
-              id: $collectionId
-              filters: [{
-                code: "manually-assigned-filter"
-                arguments: [{ name: "productIds", value: $filterValue }]
-              }]
-            }) { id }
-          }
-        `, { collectionId: realCollectionId, filterValue });
+        if (realCollectionId) {
+          // STEP 6.2 - Assign product to collection via filter
+          const filterValue = `["${newProductId}"]`;
+          await adminClientFetch(`
+            mutation AssignToCollection($collectionId: ID!, $filterValue: String!) {
+              updateCollection(input: {
+                id: $collectionId
+                filters: [{
+                  code: "manually-assigned-filter"
+                  arguments: [{ name: "productIds", value: $filterValue }]
+                }]
+              }) { id }
+            }
+          `, { collectionId: realCollectionId, filterValue });
+          
+          setSuccess(`Product saved successfully! It will appear on the website within a few seconds.`);
+        } else {
+          setSuccess(`Product saved! Note: category assignment pending - please assign manually in Vendure dashboard`);
+        }
 
-        // STEP 7 - Show success message
-        setSuccess(`Product saved successfully! It will appear on the website within a few seconds.`);
         setTimeout(() => {
           router.push('/admin/products');
           router.refresh();
@@ -311,7 +335,7 @@ export default function ProductForm({ productId }: { productId?: string }) {
         }
         
         const targetSlug = subcategoryId || categoryId;
-        const realCollectionId = await resolveCollectionWithFallback(targetSlug, categoryId);
+        const realCollectionId = await resolveCollectionDirectly(targetSlug, categoryId);
         
         if (realCollectionId) {
           const filterValue = `["${productId}"]`;
@@ -326,9 +350,12 @@ export default function ProductForm({ productId }: { productId?: string }) {
               }) { id }
             }
           `, { collectionId: realCollectionId, filterValue });
+          
+          setSuccess(`Product updated successfully!`);
+        } else {
+          setSuccess(`Product saved! Note: category assignment pending - please assign manually in Vendure dashboard`);
         }
 
-        setSuccess(`Product updated successfully!`);
         setTimeout(() => {
           router.push('/admin/products');
           router.refresh();

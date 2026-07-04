@@ -85,10 +85,11 @@ export async function POST(req: NextRequest) {
 
   if (token) {
     response.cookies.set(ADMIN_TOKEN_COOKIE, token, {
-      httpOnly: true,
+      httpOnly: false,
       sameSite: 'lax',
       secure: isProduction,
       path: '/',
+      maxAge: 86400,
     });
   }
 
