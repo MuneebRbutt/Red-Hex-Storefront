@@ -121,7 +121,29 @@ export default async function CollectionPage({ params }: { params: { slug: strin
     if (collection) {
       collectionName = collection.name;
       collectionDesc = collection.description;
-      liveVariants = collection.productVariants?.items || [];
+      
+      const extractImageUrl = (description: string) => {
+        try {
+          const match = description?.match(/\{"_imageUrl":"([^"]+)"\}/)
+          return match ? match[1] : null
+        } catch {
+          return null
+        }
+      };
+
+      liveVariants = (collection.productVariants?.items || []).map((v: any) => {
+        const cloudinaryUrl = extractImageUrl(v.product.description || '');
+        if (cloudinaryUrl) {
+          return {
+            ...v,
+            product: {
+              ...v.product,
+              featuredAsset: { preview: cloudinaryUrl }
+            }
+          };
+        }
+        return v;
+      });
     }
   } catch (err) {
     console.error('Failed to fetch live collection:', err);

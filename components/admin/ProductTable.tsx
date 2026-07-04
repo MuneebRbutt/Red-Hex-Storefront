@@ -9,6 +9,7 @@ type ProductRow = {
   id: string;
   name: string;
   slug: string;
+  description?: string;
   featuredAsset?: { preview?: string } | null;
   variants: Array<{ id: string; price?: number | null; stockOnHand?: number | null }>;
   collections?: Array<{ id: string; name: string }>;
@@ -21,6 +22,7 @@ query AdminProductsList {
       id
       name
       slug
+      description
       featuredAsset { preview }
       collections { id name }
       variants { id price stockOnHand }
@@ -34,6 +36,15 @@ mutation DeleteProduct($id: ID!) {
   deleteProduct(id: $id) { result }
 }
 `;
+
+const extractImageUrl = (description: string) => {
+  try {
+    const match = description.match(/\{"_imageUrl":"([^"]+)"\}/)
+    return match ? match[1] : null
+  } catch {
+    return null
+  }
+}
 
 export default function ProductTable() {
   const router = useRouter();
@@ -110,11 +121,15 @@ export default function ProductTable() {
           {rows.map((product) => (
             <tr key={product.id} className="border-t">
               <td className="p-3">
-                {product.featuredAsset?.preview ? (
-                  <img src={product.featuredAsset.preview} alt={product.name} className="h-10 w-10 rounded object-cover" />
-                ) : (
-                  <div className="h-10 w-10 rounded bg-gray-200" />
-                )}
+                {(() => {
+                  const cloudinaryUrl = extractImageUrl(product.description || '');
+                  const imgUrl = cloudinaryUrl || product.featuredAsset?.preview;
+                  return imgUrl ? (
+                    <img src={imgUrl} alt={product.name} className="h-10 w-10 rounded object-cover" />
+                  ) : (
+                    <div className="h-10 w-10 rounded bg-gray-200" />
+                  );
+                })()}
               </td>
               <td className="p-3">{product.name}</td>
               <td className="p-3">{product.category}</td>

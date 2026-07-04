@@ -126,6 +126,7 @@ export default function ProductForm({ productId }: { productId?: string }) {
   const [subcategoryId, setSubcategoryId] = useState('');
   const [sizes, setSizes] = useState<string[]>(['M']);
   const [imageFile, setImageFile] = useState<File | null>(null);
+  const [existingImageUrl, setExistingImageUrl] = useState<string>('');
   const [variantId, setVariantId] = useState<string>('');
   const [assetId, setAssetId] = useState<string>('');
 
@@ -140,7 +141,13 @@ export default function ProductForm({ productId }: { productId?: string }) {
       .then((data) => {
         const p = data.product;
         setName(p.name ?? '');
-        setDescription(p.description ?? '');
+        
+        const match = p.description?.match(/\{"_imageUrl":"([^"]+)"\}/);
+        if (match) {
+          setExistingImageUrl(match[1]);
+        }
+        
+        setDescription((p.description ?? '').replace(/\{"_imageUrl":"[^"]+"\}/g, '').trim());
         setPrice((p.variants?.[0]?.price ?? 0) / 100);
         setStock(p.variants?.[0]?.stockOnHand ?? 0);
         setVariantId(p.variants?.[0]?.id ?? '');
@@ -161,15 +168,25 @@ export default function ProductForm({ productId }: { productId?: string }) {
     if (!selectedStillValid) setSubcategoryId('');
   }, [subcategoryId, subcategories]);
 
-  async function uploadImageIfNeeded(): Promise<string | undefined> {
-    if (!imageFile) return assetId || undefined;
-    const fd = new FormData();
-    fd.append('file', imageFile);
-    const res = await fetch('/api/admin/upload', { method: 'POST', body: fd });
-    const json = await res.json();
-    if (!res.ok) throw new Error(json.message ?? 'Upload failed');
-    return json.id as string;
-  }
+  const uploadToCloudinary = async (file: File): Promise<string> => {
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('upload_preset', process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET!);
+    formData.append('folder', 'red-hex-industries');
+    
+    const res = await fetch(
+      `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload`,
+      { method: 'POST', body: formData }
+    );
+    
+    const data = await res.json();
+    
+    if (data.secure_url) {
+      return data.secure_url;
+    } else {
+      throw new Error('Cloudinary upload failed: ' + JSON.stringify(data));
+    }
+  };
 
   function slugify(value: string): string {
     return value.toLowerCase().trim().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
@@ -324,25 +341,21 @@ export default function ProductForm({ productId }: { productId?: string }) {
     }
     try {
       const slug = slugify(name);
-      const uploadedAssetId = await uploadImageIfNeeded();
-
-      if (uploadedAssetId) {
-        // STEP 3 - Assign asset to channel
-        await adminClientFetch(`
-          mutation AssignAssets($assetIds: [ID!]!) {
-            assignAssetsToChannel(input: { assetIds: $assetIds, channelId: "1" }) { id }
-          }
-        `, { assetIds: [uploadedAssetId] });
+      let imageUrl = existingImageUrl;
+      if (imageFile) {
+        imageUrl = await uploadToCloudinary(imageFile);
       }
+
+      const descriptionWithImage = imageUrl 
+        ? `${description}\n\n{"_imageUrl":"${imageUrl}"}`
+        : description;
 
       if (!editing) {
         // STEP 2 - Create product
         const createRes = await adminClientFetch<{ createProduct: { id: string } }>(CREATE_PRODUCT, {
           input: {
             enabled: true,
-            featuredAssetId: uploadedAssetId,
-            assetIds: uploadedAssetId ? [uploadedAssetId] : [],
-            translations: [{ languageCode: 'en', name, slug, description }],
+            translations: [{ languageCode: 'en', name, slug, description: descriptionWithImage }],
           },
         });
         const newProductId = createRes.createProduct.id;
@@ -354,8 +367,6 @@ export default function ProductForm({ productId }: { productId?: string }) {
           price: 0,
           stockOnHand: stock,
           trackInventory: 'FALSE',
-          featuredAssetId: uploadedAssetId,
-          assetIds: uploadedAssetId ? [uploadedAssetId] : [],
           translations: [{ languageCode: 'en', name: `${name} ${size}` }],
         }));
         
@@ -373,9 +384,7 @@ export default function ProductForm({ productId }: { productId?: string }) {
         await adminClientFetch(UPDATE_PRODUCT, {
           input: {
             id: productId,
-            featuredAssetId: uploadedAssetId,
-            assetIds: uploadedAssetId ? [uploadedAssetId] : [],
-            translations: [{ languageCode: 'en', name, slug, description }],
+            translations: [{ languageCode: 'en', name, slug, description: descriptionWithImage }],
           },
         });
         if (variantId) {
@@ -385,8 +394,6 @@ export default function ProductForm({ productId }: { productId?: string }) {
               price: 0,
               stockOnHand: stock,
               trackInventory: 'FALSE',
-              featuredAssetId: uploadedAssetId,
-              assetIds: uploadedAssetId ? [uploadedAssetId] : [],
               sku: `${slug}-${(sizes[0] ?? 'default').toLowerCase()}`,
             },
           });

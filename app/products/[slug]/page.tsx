@@ -38,6 +38,7 @@ const GET_RELATED = gql`
         id
         name
         slug
+        description
         featuredAsset { preview }
         variants { priceWithTax }
       }
@@ -55,6 +56,15 @@ function formatPrice(cents: number) {
 function getVariantLabel(name: string) {
   const parts = name.split(' ');
   return parts[parts.length - 1];
+}
+
+const extractImageUrl = (description: string) => {
+  try {
+    const match = description?.match(/\{"_imageUrl":"([^"]+)"\}/)
+    return match ? match[1] : null
+  } catch {
+    return null
+  }
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -129,6 +139,9 @@ export default function ProductPage({ params }: { params: { slug: string } }) {
   // ── Resolve images ────────────────────────────────────────────────────────
   const images: string[] = useMemo(() => {
     if (!product) return FALLBACK_IMAGES;
+    const cloudinaryUrl = extractImageUrl(product.description || '');
+    if (cloudinaryUrl) return [cloudinaryUrl];
+    
     const fromAssets = (product.assets || []).map((a: any) => a.preview).filter(Boolean);
     if (fromAssets.length > 0) return fromAssets;
     if (product.featuredAsset?.preview) return [product.featuredAsset.preview, ...FALLBACK_IMAGES.slice(1)];
@@ -145,13 +158,16 @@ export default function ProductPage({ params }: { params: { slug: string } }) {
     return gqlItems
       .filter((p: any) => p.slug !== slug)
       .slice(0, 4)
-      .map((p: any) => ({
-        id: p.id,
-        name: p.name,
-        slug: p.slug,
-        image: p.featuredAsset?.preview || FALLBACK_IMAGES[0],
-        price: (p.variants?.[0]?.priceWithTax ?? 0) / 100,
-      }));
+      .map((p: any) => {
+        const cloudinaryUrl = extractImageUrl(p.description || '');
+        return {
+          id: p.id,
+          name: p.name,
+          slug: p.slug,
+          image: cloudinaryUrl || p.featuredAsset?.preview || FALLBACK_IMAGES[0],
+          price: (p.variants?.[0]?.priceWithTax ?? 0) / 100,
+        };
+      });
   }, [relatedData, slug]);
 
   // ── Add to cart ───────────────────────────────────────────────────────────
@@ -380,7 +396,7 @@ export default function ProductPage({ params }: { params: { slug: string } }) {
                   ? (product._isMock
                     // mock descriptions can contain HTML — strip tags for the short blurb
                     ? product.description.replace(/<[^>]+>/g, ' ').trim()
-                    : product.description)
+                    : product.description.replace(/\{"_imageUrl":"[^"]+"\}/g, '').trim())
                   : 'Premium quality garment crafted to the highest manufacturing standards by RED HEX INDUSTRIES. Designed for performance, built to last.'}
               </p>
             </div>
@@ -616,7 +632,7 @@ export default function ProductPage({ params }: { params: { slug: string } }) {
               {product.description
                 ? (product._isMock
                     ? <div dangerouslySetInnerHTML={{ __html: product.description }} />
-                    : <p>{product.description}</p>)
+                    : <p>{product.description.replace(/\{"_imageUrl":"[^"]+"\}/g, '').trim()}</p>)
                 : (
                   <p>
                     Premium quality garment crafted to the highest manufacturing standards by RED HEX INDUSTRIES.
