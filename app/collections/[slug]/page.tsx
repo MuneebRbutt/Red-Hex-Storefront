@@ -1,5 +1,6 @@
 import React from 'react';
 import CollectionClient from '@/components/collections/CollectionClient';
+import { MOCK_PRODUCTS } from '@/lib/mockProducts';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Static parameter pre-generation definition (Server Component side)
@@ -48,34 +49,6 @@ export function generateStaticParams() {
   ];
 }
 
-const MOCK_PRODUCTS = [
-  {
-    id: 'mock-1',
-    name: 'Coming Soon: Premium Gear',
-    priceWithTax: 5999,
-    product: {
-      id: 'mock-prod-1',
-      name: 'Coming Soon: Premium Gear',
-      slug: 'coming-soon-premium-gear',
-      description: 'Our latest collection is currently in production.',
-      featuredAsset: { preview: 'https://placehold.co/600x800/1a1a1a/ffffff?text=Coming+Soon' },
-      assets: []
-    }
-  },
-  {
-    id: 'mock-2',
-    name: 'Coming Soon: Signature Collection',
-    priceWithTax: 8999,
-    product: {
-      id: 'mock-prod-2',
-      name: 'Coming Soon: Signature Collection',
-      slug: 'coming-soon-signature-collection',
-      description: 'Exclusive pieces dropping soon.',
-      featuredAsset: { preview: 'https://placehold.co/600x800/1a1a1a/ffffff?text=Coming+Soon' },
-      assets: []
-    }
-  }
-];
 
 export default async function CollectionPage({ params }: { params: { slug: string } }) {
   let liveVariants = [];
@@ -149,7 +122,41 @@ export default async function CollectionPage({ params }: { params: { slug: strin
     console.error('Failed to fetch live collection:', err);
   }
 
-  const initialVariants = liveVariants.length > 0 ? liveVariants : MOCK_PRODUCTS;
+  let initialVariants = liveVariants;
+  if (liveVariants.length === 0) {
+    const filteredMocks = MOCK_PRODUCTS.filter(p => p.category === params.slug || p.subcategory === params.slug);
+    if (filteredMocks.length > 0) {
+      initialVariants = filteredMocks.map((m, i) => ({
+        id: `mock-variant-${i}`,
+        name: m.name,
+        priceWithTax: m.price * 100,
+        product: {
+          id: m.id || `mock-prod-${i}`,
+          name: m.name,
+          slug: m.slug,
+          description: m.description,
+          featuredAsset: { preview: m.images[0] },
+          assets: m.images.map(img => ({ preview: img }))
+        }
+      }));
+    } else {
+      initialVariants = [
+        {
+          id: 'mock-1',
+          name: 'Coming Soon: Premium Gear',
+          priceWithTax: 5999,
+          product: {
+            id: 'mock-prod-1',
+            name: 'Coming Soon: Premium Gear',
+            slug: 'coming-soon-premium-gear',
+            description: 'Our latest collection is currently in production.',
+            featuredAsset: { preview: 'https://placehold.co/600x800/1a1a1a/ffffff?text=Coming+Soon' },
+            assets: []
+          }
+        }
+      ];
+    }
+  }
 
   return (
     <CollectionClient 
