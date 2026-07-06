@@ -192,7 +192,7 @@ function ProductCard({
           alt={variant.product.name}
           style={{
             position: 'absolute', inset: 0, width: '100%', height: '100%',
-            objectFit: 'cover', objectPosition: 'center',
+            objectFit: 'contain', objectPosition: 'center',
             opacity: hovered ? 0 : 1,
             transition: 'opacity 0.45s ease, transform 0.6s ease',
             transform: hovered ? 'scale(1.05)' : 'scale(1)',
@@ -205,7 +205,7 @@ function ProductCard({
           alt={`${variant.product.name} – alternate view`}
           style={{
             position: 'absolute', inset: 0, width: '100%', height: '100%',
-            objectFit: 'cover', objectPosition: 'center',
+            objectFit: 'contain', objectPosition: 'center',
             opacity: hovered ? 1 : 0,
             transition: 'opacity 0.45s ease, transform 0.6s ease',
             transform: hovered ? 'scale(1)' : 'scale(1.05)',
@@ -396,7 +396,7 @@ function TabContent({ tabIdx }: { tabIdx: number }) {
                 className="product-card"
               >
                 <div style={{ position: 'relative', aspectRatio: '3/4', overflow: 'hidden' }}>
-                  <img src={img} alt="Product" style={{ width: '100%', height: '100%', objectFit: 'cover' }} loading="lazy" />
+                  <img src={img} alt="Product" style={{ width: '100%', height: '100%', objectFit: 'contain' }} loading="lazy" />
                   <div style={{
                     position: 'absolute', top: 10, left: 10,
                     backgroundColor: '#c9a84c', color: '#000',

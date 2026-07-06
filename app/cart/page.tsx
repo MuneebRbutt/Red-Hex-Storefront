@@ -290,7 +290,7 @@ export default function CartPage() {
                         style={{
                           width: '72px',
                           height: '90px',
-                          objectFit: 'cover',
+                          objectFit: 'contain',
                           backgroundColor: '#111',
                           border: '1px solid rgba(255,255,255,0.06)',
                         }}

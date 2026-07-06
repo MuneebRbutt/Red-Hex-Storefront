@@ -270,8 +270,8 @@ export default function ProductPage({ params }: { params: { slug: string } }) {
                 style={{
                   width: '100%',
                   height: '100%',
-                  objectFit: 'cover',
-                  objectPosition: 'center top',
+                  objectFit: 'contain',
+                  objectPosition: 'center',
                   animation: 'fadeImg 0.3s ease',
                 }}
               />
@@ -712,7 +712,7 @@ export default function ProductPage({ params }: { params: { slug: string } }) {
                   <img
                     src={rp.image}
                     alt={rp.name}
-                    style={{ width: '100%', height: '100%', objectFit: 'cover', transition: 'transform 0.4s ease' }}
+                    style={{ width: '100%', height: '100%', objectFit: 'contain', transition: 'transform 0.4s ease' }}
                     className="related-card-img"
                   />
                 </Link>

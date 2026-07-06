@@ -201,7 +201,7 @@ export default function CollectionClient({
                             src={img1}
                             alt={item.name}
                             style={{
-                              width: '100%', height: '100%', objectFit: 'cover',
+                              width: '100%', height: '100%', objectFit: 'contain',
                               transition: 'transform 0.4s ease',
                             }}
                             className="product-card-img primary-img"
@@ -211,7 +211,7 @@ export default function CollectionClient({
                               src={img2}
                               alt={`${item.name} alternate view`}
                               style={{
-                                position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover',
+                                position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'contain',
                                 opacity: 0, transition: 'opacity 0.4s ease',
                               }}
                               className="secondary-img"

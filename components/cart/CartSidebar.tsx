@@ -258,7 +258,7 @@ function CartItemRow({
           style={{
             width: '72px',
             height: '90px',
-            objectFit: 'cover',
+            objectFit: 'contain',
             backgroundColor: '#111',
           }}
         />
