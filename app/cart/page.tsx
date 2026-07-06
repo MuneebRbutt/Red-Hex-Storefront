@@ -291,6 +291,7 @@ export default function CartPage() {
                           width: '72px',
                           height: '90px',
                           objectFit: 'contain',
+                          objectPosition: 'center',
                           backgroundColor: '#111',
                           border: '1px solid rgba(255,255,255,0.06)',
                         }}

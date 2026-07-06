@@ -708,11 +708,11 @@ export default function ProductPage({ params }: { params: { slug: string } }) {
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: '1.5rem' }} className="related-grid">
             {relatedProducts.map((rp) => (
               <article key={rp.id} style={relatedCardStyle} className="related-card-hover">
-                <Link href={`/products/${rp.slug}`} style={{ display: 'block', overflow: 'hidden', aspectRatio: '3/4', position: 'relative' }}>
+                <Link href={`/products/${rp.slug}`} style={{ display: 'block', overflow: 'hidden', aspectRatio: '3/4', position: 'relative', backgroundColor: '#1a1a1a' }}>
                   <img
                     src={rp.image}
                     alt={rp.name}
-                    style={{ width: '100%', height: '100%', objectFit: 'contain', transition: 'transform 0.4s ease' }}
+                    style={{ width: '100%', height: '100%', objectFit: 'contain', objectPosition: 'center', transition: 'transform 0.4s ease' }}
                     className="related-card-img"
                   />
                 </Link>

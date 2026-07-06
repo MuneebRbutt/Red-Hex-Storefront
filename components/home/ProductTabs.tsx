@@ -183,7 +183,7 @@ function ProductCard({
       {/* ── Image area ── */}
       <Link
         href={`/products/${variant.product.slug}`}
-        style={{ position: 'relative', display: 'block', overflow: 'hidden', aspectRatio: '3/4', flexShrink: 0 }}
+        style={{ position: 'relative', display: 'block', overflow: 'hidden', aspectRatio: '3/4', flexShrink: 0, backgroundColor: '#1a1a1a' }}
         tabIndex={-1}
       >
         {/* Primary image */}
@@ -395,8 +395,8 @@ function TabContent({ tabIdx }: { tabIdx: number }) {
                 }}
                 className="product-card"
               >
-                <div style={{ position: 'relative', aspectRatio: '3/4', overflow: 'hidden' }}>
-                  <img src={img} alt="Product" style={{ width: '100%', height: '100%', objectFit: 'contain' }} loading="lazy" />
+                <div style={{ position: 'relative', aspectRatio: '3/4', overflow: 'hidden', backgroundColor: '#1a1a1a' }}>
+                  <img src={img} alt="Product" style={{ width: '100%', height: '100%', objectFit: 'contain', objectPosition: 'center' }} loading="lazy" />
                   <div style={{
                     position: 'absolute', top: 10, left: 10,
                     backgroundColor: '#c9a84c', color: '#000',

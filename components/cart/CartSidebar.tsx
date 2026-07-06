@@ -259,6 +259,7 @@ function CartItemRow({
             width: '72px',
             height: '90px',
             objectFit: 'contain',
+            objectPosition: 'center',
             backgroundColor: '#111',
           }}
         />
