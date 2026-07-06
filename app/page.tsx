@@ -132,7 +132,6 @@ export default function Home() {
               
               <div className="flex justify-between items-end z-10">
                 <span className="font-heading text-xl tracking-wide uppercase">Oversize Cargo Pants</span>
-                <span className="text-brand-gold font-heading text-lg font-medium">$189.00</span>
               </div>
             </div>
             <div className="p-4">
@@ -162,7 +161,6 @@ export default function Home() {
 
               <div className="flex justify-between items-end z-10">
                 <span className="font-heading text-xl tracking-wide uppercase">Tactical Heavy Shirt</span>
-                <span className="text-brand-gold font-heading text-lg font-medium">$145.00</span>
               </div>
             </div>
             <div className="p-4">
@@ -192,7 +190,6 @@ export default function Home() {
 
               <div className="flex justify-between items-end z-10">
                 <span className="font-heading text-xl tracking-wide uppercase">Gold-Edition Anorak</span>
-                <span className="text-brand-gold font-heading text-lg font-medium">$295.00</span>
               </div>
             </div>
             <div className="p-4">

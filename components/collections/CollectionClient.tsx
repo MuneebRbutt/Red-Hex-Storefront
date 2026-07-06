@@ -77,7 +77,7 @@ export default function CollectionClient({
   serverCollectionName?: string;
   serverCollectionDesc?: string;
 }) {
-  const [priceRange, setPriceRange] = useState<string>('all');
+  // Removed priceRange state
   const [currentPage, setCurrentPage] = useState<number>(1);
   const itemsPerPage = 8;
 
@@ -94,19 +94,7 @@ export default function CollectionClient({
 
   const variants = initialVariants;
 
-  // Price filtering logic
-  const filteredVariants = useMemo(() => {
-    return variants.filter((item: any) => {
-      const priceVal = item.priceWithTax / 100;
-      if (priceRange === 'under-50') return priceVal < 50;
-      if (priceRange === '50-100') return priceVal >= 50 && priceVal <= 100;
-      if (priceRange === '100-200') return priceVal >= 100 && priceVal <= 200;
-      if (priceRange === 'over-200') return priceVal > 200;
-      return true;
-    });
-  }, [variants, priceRange]);
-
-  // Pagination logic
+  const filteredVariants = variants;
   const totalPages = Math.ceil(filteredVariants.length / itemsPerPage) || 1;
   const paginatedVariants = useMemo(() => {
     const start = (currentPage - 1) * itemsPerPage;
@@ -173,30 +161,7 @@ export default function CollectionClient({
           
           {/* ─ SIDEBAR FILTERS ─ */}
           <aside style={{ display: 'flex', flexDirection: 'column', gap: '2.5rem' }}>
-            {/* Price Filter */}
-            <div>
-              <h4 style={filterHeadingStyle}>PRICE RANGE</h4>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.7rem' }}>
-                {[
-                  { id: 'all', label: 'All Prices' },
-                  { id: 'under-50', label: 'Under $50' },
-                  { id: '50-100', label: '$50 - $100' },
-                  { id: '100-200', label: '$100 - $200' },
-                  { id: 'over-200', label: 'Over $200' },
-                ].map(opt => (
-                  <label key={opt.id} style={radioLabelStyle}>
-                    <input
-                      type="radio"
-                      name="price-filter"
-                      checked={priceRange === opt.id}
-                      onChange={() => { setPriceRange(opt.id); setCurrentPage(1); }}
-                      style={radioInputStyle}
-                    />
-                    <span>{opt.label}</span>
-                  </label>
-                ))}
-              </div>
-            </div>
+            {/* Removed Price Filter */}
           </aside>
 
           {/* ─ PRODUCT GRID ─ */}
@@ -261,8 +226,7 @@ export default function CollectionClient({
                           <Link href={`/products/${item.product.slug}`} style={{ textDecoration: 'none' }}>
                             <h3 style={cardTitleStyle}>{item.name}</h3>
                           </Link>
-                          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 'auto', paddingTop: '0.6rem' }}>
-                            <span style={cardPriceStyle}>{formatPrice(item.priceWithTax)}</span>
+                          <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', marginTop: 'auto', paddingTop: '0.6rem' }}>
                             <Link href={`/products/${item.product.slug}`} style={viewProductBtnStyle}>
                               VIEW PRODUCT
                             </Link>

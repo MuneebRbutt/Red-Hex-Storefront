@@ -277,14 +277,7 @@ function ProductCard({
           {variant.name !== variant.product.name ? variant.name : 'Standard'}
         </p>
 
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: 'auto', paddingTop: '0.75rem' }}>
-          <span style={{
-            fontFamily: "'Oswald', sans-serif", fontSize: '1.15rem', fontWeight: 700,
-            color: '#ffffff', letterSpacing: '0.03em',
-          }}>
-            {formatPrice(variant.priceWithTax)}
-          </span>
-
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', marginTop: 'auto', paddingTop: '0.75rem' }}>
           <button
             onClick={handleAddToCart}
             disabled={adding}
@@ -416,8 +409,8 @@ function TabContent({ tabIdx }: { tabIdx: number }) {
                   <h3 style={{ fontFamily: "'Oswald',sans-serif", fontSize: '1rem', fontWeight: 600, color: '#fff', textTransform: 'uppercase' as const, letterSpacing: '0.04em', lineHeight: 1.2, margin: 0 }}>
                     Premium {tab.label.split(' ')[0]} Item {i + 1}
                   </h3>
-                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '0.75rem' }}>
-                    <span style={{ fontFamily: "'Oswald',sans-serif", fontSize: '1.15rem', fontWeight: 700, color: '#fff' }}>$89.99</span>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', marginTop: '0.75rem' }}>
+
                     <button style={{
                       fontFamily: "'Inter',sans-serif", fontSize: '0.62rem', fontWeight: 700,
                       letterSpacing: '0.16em', textTransform: 'uppercase' as const,

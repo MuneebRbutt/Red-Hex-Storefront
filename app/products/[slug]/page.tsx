@@ -359,16 +359,8 @@ export default function ProductPage({ params }: { params: { slug: string } }) {
               </p>
             )}
 
-            {/* Price */}
+            {/* Stock Level */}
             <div style={{ display: 'flex', alignItems: 'baseline', gap: '0.75rem' }}>
-              <span style={{
-                fontFamily: "'Oswald',sans-serif",
-                fontSize: 'clamp(1.6rem,2.8vw,2.2rem)',
-                fontWeight: 700,
-                color: '#ffffff',
-              }}>
-                {activeVariant ? formatPrice(activeVariant.priceWithTax) : '—'}
-              </span>
               {activeVariant?.stockLevel && (
                 <span style={{
                   fontFamily: "'Inter',sans-serif",
@@ -730,9 +722,6 @@ export default function ProductPage({ params }: { params: { slug: string } }) {
                       {rp.name}
                     </h3>
                   </Link>
-                  <span style={{ fontFamily: "'Oswald',sans-serif", fontSize: '1rem', fontWeight: 700, color: '#ffffff' }}>
-                    ${rp.price.toFixed(2)}
-                  </span>
                 </div>
               </article>
             ))}
