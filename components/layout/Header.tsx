@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { useQuery } from '@apollo/client/react';
 import { gql } from 'graphql-tag';
-import { Search, Heart, ShoppingCart, User, Menu, X, ChevronDown, ChevronRight } from 'lucide-react';
+import { ShoppingCart, User, Menu, X, ChevronDown, ChevronRight } from 'lucide-react';
 import { useCart } from '@/lib/cartContext';
 import CartSidebar from '@/components/cart/CartSidebar';
 
@@ -220,9 +220,9 @@ export default function Header() {
             </span>
           </a>
 
-          {/* â”€â”€ Desktop Nav â”€â”€ */}
+          {/* ── Desktop Nav ── */}
           <nav
-            className="hidden lg:flex items-center gap-6 xl:gap-8 text-[0.7rem] uppercase tracking-wider font-semibold text-zinc-400 h-full"
+            className="hidden lg:flex items-center gap-6 xl:gap-8 ml-8 lg:ml-12 text-[0.7rem] uppercase tracking-wider font-semibold text-zinc-400 h-full flex-1"
             onMouseLeave={() => setActiveHoverMenu(null)}
           >
             {navLinks.map((link) => (
@@ -302,18 +302,7 @@ export default function Header() {
 
           {/* â”€â”€ Action Icons â”€â”€ */}
           <div className="flex items-center gap-4">
-            <button
-              className="text-brand-white hover:text-brand-gold transition-colors duration-brand"
-              aria-label="Search"
-            >
-              <Search className="w-5 h-5" />
-            </button>
-            <button
-              className="hidden sm:inline-block text-brand-white hover:text-brand-gold transition-colors duration-brand"
-              aria-label="Wishlist"
-            >
-              <Heart className="w-5 h-5" />
-            </button>
+
             <button
               onClick={(e) => { e.preventDefault(); openSidebar(); }}
               className="text-brand-white hover:text-brand-gold transition-colors duration-brand relative p-1 flex items-center justify-center group"
