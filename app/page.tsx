@@ -50,69 +50,7 @@ export default function Home() {
       {/* Trust Badges Bar */}
       <TrustBadges />
 
-      {/* Contact Form Section */}
-      <ContactForm />
 
-      {/* Design Showcase Section */}
-      <section className="relative min-h-[50vh] flex items-center justify-center border-b border-brand-dark px-6 py-20 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-zinc-900 via-brand-black to-brand-black overflow-hidden">
-        {/* Subtle grid pattern background */}
-        <div className="absolute inset-0 bg-[linear-gradient(to_right,#111_1px,transparent_1px),linear-gradient(to_bottom,#111_1px,transparent_1px)] bg-[size:4rem_4rem] opacity-30"></div>
-        
-        <div className="max-w-4xl text-center z-10 flex flex-col items-center">
-          <div className="inline-flex items-center gap-2 px-3 py-1 border border-brand-gold/30 bg-brand-gold/5 text-brand-gold text-xs uppercase tracking-widest mb-6 font-mono">
-            <span className="w-1.5 h-1.5 bg-brand-gold rounded-full animate-pulse"></span>
-            Drop 01 // Industrial workwear
-          </div>
-          
-          <h2 className="font-heading text-5xl md:text-8xl tracking-tighter uppercase font-bold text-brand-white leading-none mb-6">
-            Engineered <br/>For <span className="text-brand-gold">Heavy Utility</span>
-          </h2>
-          
-          <p className="text-zinc-400 text-lg md:text-xl max-w-2xl mb-10 leading-relaxed font-body">
-            High-performance garments crafted for durability, functionality, and industrial aesthetics. Designed with premium heavy canvas, reinforced seam lines, and gold-alloy utility fixtures.
-          </p>
-          
-          <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
-            <button className="btn-solid min-w-[200px]">
-              Shop Collection
-            </button>
-            <button className="btn-outlined min-w-[200px]">
-              Explore Hardware
-            </button>
-          </div>
-        </div>
-      </section>
-
-      {/* Feature Grid / Cards Section */}
-      <section className="py-24 px-6 max-w-7xl mx-auto border-b border-brand-dark">
-        <div className="text-center mb-16">
-          <h2 className="font-heading text-4xl tracking-tight mb-4">Core Specifications</h2>
-          <p className="text-zinc-400 font-body">Built to endure the demands of modern fabrication environments.</p>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="card-industrial group">
-            <div className="font-heading text-brand-gold text-2xl mb-3">01 / HEAVY CANVAS</div>
-            <p className="text-zinc-400 text-sm leading-relaxed">
-              Constructed from double-weave 12oz organic duck canvas. Fire-retardant coating and triple-needle stitched seams ensure complete security.
-            </p>
-          </div>
-          
-          <div className="card-industrial group">
-            <div className="font-heading text-brand-gold text-2xl mb-3">02 / MODULAR UTILITY</div>
-            <p className="text-zinc-400 text-sm leading-relaxed">
-              Equipped with detachable cargo pouches, gold-plated anodized carabiners, and steel alloy rivets at key tension areas.
-            </p>
-          </div>
-          
-          <div className="card-industrial group">
-            <div className="font-heading text-brand-gold text-2xl mb-3">03 / ANATOMICAL SEAMS</div>
-            <p className="text-zinc-400 text-sm leading-relaxed">
-              Designed with articulated knees and offset shoulder cuts to provide maximum range of motion during manual operations.
-            </p>
-          </div>
-        </div>
-      </section>
 
       {/* Product Showcase Section */}
       <section className="py-24 px-6 max-w-7xl mx-auto">
@@ -155,6 +93,9 @@ export default function Home() {
           ))}
         </div>
       </section>
+
+      {/* Contact Form Section */}
+      <ContactForm />
 
       <Footer />
     </div>
