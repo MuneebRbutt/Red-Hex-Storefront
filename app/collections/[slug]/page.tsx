@@ -26,11 +26,6 @@ export function generateStaticParams() {
     { slug: 'sweatshirt' },
     { slug: 'sweat-pants' },
     { slug: 't-shirts' },
-    // Jacket Collections subcategories
-    { slug: 'bomber-jackets' },
-    { slug: 'puffer-jackets' },
-    { slug: 'leather-jackets' },
-    { slug: 'varsity-jacket' },
     // Gymwear & Activewear subcategories
     { slug: 'tank-top' },
     { slug: 'compression-shirts' },
@@ -44,8 +39,6 @@ export function generateStaticParams() {
     { slug: 'safety-vests' },
     { slug: 'construction-suits' },
     { slug: 'safety-jackets' },
-    { slug: 'denim-jacket' },
-    { slug: 'windbreaker-jacket' },
   ];
 }
 

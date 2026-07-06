@@ -41,7 +41,7 @@ const CATEGORIES = [
   {
     key: 'jacket-collections',
     label: 'JACKET COLLECTIONS',
-    sub: 'Bomber · Puffer · Leather · Varsity',
+    sub: '',
     href: '/collections/jacket-collections',
     fallback: 'https://placehold.co/800x600/1a1a1a/ffffff?text=JACKET+COLLECTIONS',
     accent: '#c9a84c',

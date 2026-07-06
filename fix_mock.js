@@ -1,0 +1,1 @@
+const fs = require('fs'); let code = fs.readFileSync('lib/mockProducts.ts', 'utf8'); code = code.replace(/category: \"jacket-collections\",\s*subcategory: \"[^\"]+\"/g, 'category: \"jacket-collections\",\n    subcategory: \"\"'); fs.writeFileSync('lib/mockProducts.ts', code); console.log('Done');

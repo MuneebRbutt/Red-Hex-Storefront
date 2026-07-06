@@ -20,7 +20,7 @@ const CATEGORY_MAP: Record<string, { label: string; subs: string[] }> = {
   },
   'jacket-collections': {
     label: 'JACKET COLLECTIONS',
-    subs: ['bomber-jackets', 'puffer-jackets', 'leather-jackets', 'varsity-jacket', 'denim-jacket', 'windbreaker-jacket'],
+    subs: [],
   },
   'gymwear-activewear': {
     label: 'GYMWEAR & ACTIVEWEAR',
@@ -46,12 +46,7 @@ const SUBCAT_TO_PARENT: Record<string, { parentSlug: string; parentLabel: string
   'sweat-pants': { parentSlug: 'casual-wear', parentLabel: 'CASUAL WEAR', label: 'Sweat Pants' },
   't-shirts': { parentSlug: 'casual-wear', parentLabel: 'CASUAL WEAR', label: 'T-Shirts' },
   
-  'bomber-jackets': { parentSlug: 'jacket-collections', parentLabel: 'JACKET COLLECTIONS', label: 'Bomber Jackets' },
-  'puffer-jackets': { parentSlug: 'jacket-collections', parentLabel: 'JACKET COLLECTIONS', label: 'Puffer Jackets' },
-  'leather-jackets': { parentSlug: 'jacket-collections', parentLabel: 'JACKET COLLECTIONS', label: 'Leather Jackets' },
-  'varsity-jacket': { parentSlug: 'jacket-collections', parentLabel: 'JACKET COLLECTIONS', label: 'Varsity Jacket' },
-  'denim-jacket': { parentSlug: 'jacket-collections', parentLabel: 'JACKET COLLECTIONS', label: 'Denim Jacket' },
-  'windbreaker-jacket': { parentSlug: 'jacket-collections', parentLabel: 'JACKET COLLECTIONS', label: 'Windbreaker Jacket' },
+
   
   'tank-top': { parentSlug: 'gymwear-activewear', parentLabel: 'GYMWEAR & ACTIVEWEAR', label: 'Tank Top' },
   'compression-shirts': { parentSlug: 'gymwear-activewear', parentLabel: 'GYMWEAR & ACTIVEWEAR', label: 'Compression Shirts' },

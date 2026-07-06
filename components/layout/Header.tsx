@@ -76,22 +76,6 @@ const MEGA_MENUS: Record<string, MegaMenuCategory> = {
     ],
   },
 
-  'JACKET COLLECTIONS': {
-    title: 'JACKET COLLECTIONS',
-    columns: [
-      {
-        heading: 'Jackets',
-        items: [
-          { name: 'Bomber Jackets',  href: '/collections/bomber-jackets' },
-          { name: 'Puffer Jackets',  href: '/collections/puffer-jackets' },
-          { name: 'Leather Jackets', href: '/collections/leather-jackets' },
-          { name: 'Varsity Jacket',  href: '/collections/varsity-jacket' },
-          { name: 'Denim Jacket',       href: '/collections/denim-jacket' },
-          { name: 'Windbreaker Jacket', href: '/collections/windbreaker-jacket' },
-        ],
-      },
-    ],
-  },
 
   'GYMWEAR & ACTIVEWEAR': {
     title: 'GYMWEAR & ACTIVEWEAR',
@@ -163,7 +147,7 @@ export default function Header() {
     { name: 'Home',                href: '/' },
     { name: 'SPORTSWEAR',          href: '/collections/sportswear',         hasMega: true },
     { name: 'CASUAL WEAR',         href: '/collections/casual-wear',        hasMega: true },
-    { name: 'JACKET COLLECTIONS',  href: '/collections/jacket-collections', hasMega: true },
+    { name: 'JACKET COLLECTIONS',  href: '/collections/jacket-collections', hasMega: false },
     { name: 'GYMWEAR & ACTIVEWEAR',href: '/collections/gymwear-activewear', hasMega: true },
     { name: 'SAFETY & WORK WEAR',  href: '/collections/safety-work-wear',   hasMega: true },
     { name: 'Contact Us',          href: '/contact' },

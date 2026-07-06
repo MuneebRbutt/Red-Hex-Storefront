@@ -473,7 +473,7 @@ export default function ProductForm({ productId }: { productId?: string }) {
           <div className="space-y-1">
             <label className="text-sm font-medium">Subcategory</label>
             <div className="w-full rounded border px-3 py-2 bg-gray-50 text-sm text-gray-500">
-              No subcategory needed for Jacket Collections
+              Products will be added directly to Jacket Collections
             </div>
           </div>
         )}
