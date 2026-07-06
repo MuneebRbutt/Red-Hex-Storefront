@@ -183,7 +183,7 @@ function ProductCard({
       {/* ── Image area ── */}
       <Link
         href={`/products/${variant.product.slug}`}
-        className="block relative overflow-hidden bg-[#111111] w-full h-[280px] md:h-[320px] shrink-0"
+        className="block relative overflow-hidden bg-white w-full h-[280px] md:h-[320px] shrink-0"
         tabIndex={-1}
       >
         {/* Primary image */}
@@ -193,7 +193,6 @@ function ProductCard({
           style={{
             position: 'absolute', inset: 0, width: '100%', height: '100%',
             objectFit: 'contain', objectPosition: 'center',
-            padding: '16px', backgroundColor: '#111111',
             opacity: hovered ? 0 : 1,
             transition: 'opacity 0.45s ease, transform 0.6s ease',
             transform: hovered ? 'scale(1.05)' : 'scale(1)',
@@ -207,7 +206,6 @@ function ProductCard({
           style={{
             position: 'absolute', inset: 0, width: '100%', height: '100%',
             objectFit: 'contain', objectPosition: 'center',
-            padding: '16px', backgroundColor: '#111111',
             opacity: hovered ? 1 : 0,
             transition: 'opacity 0.45s ease, transform 0.6s ease',
             transform: hovered ? 'scale(1)' : 'scale(1.05)',
@@ -397,8 +395,8 @@ function TabContent({ tabIdx }: { tabIdx: number }) {
                 }}
                 className="product-card"
               >
-                <div className="relative overflow-hidden bg-[#111111] w-full h-[280px] md:h-[320px]">
-                  <img src={img} alt="Product" style={{ width: '100%', height: '100%', objectFit: 'contain', objectPosition: 'center', padding: '16px', backgroundColor: '#111111' }} loading="lazy" />
+                <div className="relative overflow-hidden bg-white w-full h-[280px] md:h-[320px]">
+                  <img src={img} alt="Product" style={{ width: '100%', height: '100%', objectFit: 'contain', objectPosition: 'center' }} loading="lazy" />
                   <div style={{
                     position: 'absolute', top: 10, left: 10,
                     backgroundColor: '#c9a84c', color: '#000',
