@@ -157,15 +157,10 @@ export default function CollectionClient({
 
       {/* ── MAIN LAYOUT ── */}
       <section style={{ maxWidth: '1400px', margin: '0 auto', padding: '3rem clamp(1rem, 4vw, 3rem)' }}>
-        <div style={{ display: 'grid', gridTemplateColumns: '260px 1fr', gap: '3rem' }} className="collection-layout">
+        <div className="collection-layout">
           
-          {/* ─ SIDEBAR FILTERS ─ */}
-          <aside style={{ display: 'flex', flexDirection: 'column', gap: '2.5rem' }}>
-            {/* Removed Price Filter */}
-          </aside>
-
           {/* ─ PRODUCT GRID ─ */}
-          <div>
+          <div style={{ width: '100%' }}>
             {paginatedVariants.length === 0 ? (
               /* Coming Soon styled message */
               <div style={comingSoonStyle}>
