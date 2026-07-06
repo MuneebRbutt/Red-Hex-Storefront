@@ -290,6 +290,7 @@ export default function CategoryGrid() {
 
   return (
     <section
+      id="categories"
       style={{ backgroundColor: '#000000', padding: '5rem 0 4rem' }}
       aria-labelledby="category-heading"
     >

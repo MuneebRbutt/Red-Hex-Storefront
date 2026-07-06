@@ -2,6 +2,8 @@ import React from 'react';
 import HeroSlider from '@/components/home/HeroSlider';
 import CategoryGrid from '@/components/home/CategoryGrid';
 import ProductTabs from '@/components/home/ProductTabs';
+import { mockProducts } from '@/lib/mockProducts';
+import Link from 'next/link';
 
 import Footer from '@/components/layout/Footer';
 import AboutSection from '@/components/home/AboutSection';
@@ -10,6 +12,25 @@ import TrustBadges from '@/components/home/TrustBadges';
 import ContactForm from '@/components/home/ContactForm';
 
 export default function Home() {
+  const realProducts = mockProducts.filter(p => p.images && p.images[0]?.includes('cloudinary'));
+  const featuredProducts: typeof mockProducts = [];
+  const seenCategories = new Set<string>();
+  for (const p of realProducts) {
+    if (!seenCategories.has(p.category)) {
+      seenCategories.add(p.category);
+      featuredProducts.push(p);
+    }
+    if (featuredProducts.length === 5) break;
+  }
+  if (featuredProducts.length < 5) {
+    for (const p of realProducts) {
+      if (!featuredProducts.some(fp => fp.slug === p.slug)) {
+        featuredProducts.push(p);
+      }
+      if (featuredProducts.length === 5) break;
+    }
+  }
+
   return (
     <div className="min-h-screen bg-brand-black text-brand-white font-body selection:bg-brand-gold selection:text-brand-black">
 
@@ -107,97 +128,33 @@ export default function Home() {
           </a>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-          {/* Product 1 */}
-          <div className="border border-brand-dark bg-brand-dark/20 flex flex-col group transition-all duration-brand hover:border-zinc-700">
-            {/* CSS placeholder image representing industrial gear */}
-            <div className="h-96 bg-zinc-900 border-b border-brand-dark flex flex-col justify-between p-6 relative overflow-hidden">
-              {/* Subtle background industrial stamp effect */}
-              <span className="absolute right-0 bottom-0 text-zinc-950 font-heading text-[12rem] font-bold select-none leading-none pointer-events-none transform translate-y-12 translate-x-12">
-                APX
-              </span>
-              
-              <div className="flex justify-between items-start z-10">
-                <span className="bg-brand-gold text-brand-black text-xs font-bold uppercase tracking-widest px-2 py-0.5 font-mono">
-                  NEW
-                </span>
-                <span className="text-zinc-500 text-xs font-mono">CODE: VLNC-P01</span>
-              </div>
-              
-              {/* Abstract garment representation inside canvas */}
-              <div className="self-center z-10 w-44 h-44 border border-brand-gold/20 flex items-center justify-center bg-brand-black/55 backdrop-blur shadow-2xl relative">
-                <div className="w-32 h-32 border-4 border-dashed border-zinc-800"></div>
-                <div className="absolute font-mono text-zinc-600 text-[10px]">12oz DOUBLE-CANVAS</div>
-              </div>
-              
-              <div className="flex justify-between items-end z-10">
-                <span className="font-heading text-xl tracking-wide uppercase">Oversize Cargo Pants</span>
-              </div>
-            </div>
-            <div className="p-4">
-              <button className="btn-outlined w-full">
-                Add to Cart
-              </button>
-            </div>
-          </div>
-
-          {/* Product 2 */}
-          <div className="border border-brand-dark bg-brand-dark/20 flex flex-col group transition-all duration-brand hover:border-zinc-700">
-            <div className="h-96 bg-zinc-900 border-b border-brand-dark flex flex-col justify-between p-6 relative overflow-hidden">
-              <span className="absolute right-0 bottom-0 text-zinc-950 font-heading text-[12rem] font-bold select-none leading-none pointer-events-none transform translate-y-12 translate-x-12">
-                UTL
-              </span>
-              <div className="flex justify-between items-start z-10">
-                <span className="bg-brand-white text-brand-black text-xs font-bold uppercase tracking-widest px-2 py-0.5 font-mono">
-                  LIMITED
-                </span>
-                <span className="text-zinc-500 text-xs font-mono">CODE: VLNC-S04</span>
-              </div>
-              
-              <div className="self-center z-10 w-44 h-44 border border-brand-gold/20 flex items-center justify-center bg-brand-black/55 backdrop-blur shadow-2xl relative">
-                <div className="w-24 h-36 border border-zinc-800 rounded"></div>
-                <div className="absolute font-mono text-zinc-600 text-[10px]">WATER-REPELLENT</div>
-              </div>
-
-              <div className="flex justify-between items-end z-10">
-                <span className="font-heading text-xl tracking-wide uppercase">Tactical Heavy Shirt</span>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
+          {featuredProducts.map((product) => (
+            <div key={product.id || product.slug} className="border border-brand-dark bg-[#111111] flex flex-col group transition-all duration-300 hover:border-zinc-600">
+              <Link href={`/products/${product.slug}`} className="block relative w-full overflow-hidden bg-white h-[260px]">
+                <img
+                  src={product.images[0]}
+                  alt={product.name}
+                  style={{ width: '100%', height: '100%', objectFit: 'contain', objectPosition: 'center', transition: 'transform 0.4s ease' }}
+                  className="group-hover:scale-105"
+                />
+                <div className="absolute top-3 left-3 bg-[#cc0000] text-white text-[10px] font-bold uppercase tracking-widest px-2 py-1">
+                  FEATURED
+                </div>
+              </Link>
+              <div className="p-4 flex flex-col gap-2 flex-grow">
+                <span className="text-[#cc0000] text-[10px] font-bold tracking-widest uppercase">{product.category.replace(/-/g, ' ')}</span>
+                <Link href={`/products/${product.slug}`} className="text-white hover:text-[#c9a84c] transition-colors">
+                  <h3 className="font-heading text-lg uppercase tracking-wide leading-tight line-clamp-2">{product.name}</h3>
+                </Link>
+                <div className="mt-auto pt-4 flex justify-between items-center">
+                  <Link href={`/products/${product.slug}`} className="btn-outlined w-full text-center py-2 text-xs uppercase font-bold tracking-wider">
+                    View Product
+                  </Link>
+                </div>
               </div>
             </div>
-            <div className="p-4">
-              <button className="btn-outlined w-full">
-                Add to Cart
-              </button>
-            </div>
-          </div>
-
-          {/* Product 3 */}
-          <div className="border border-brand-dark bg-brand-dark/20 flex flex-col group transition-all duration-brand hover:border-zinc-700">
-            <div className="h-96 bg-zinc-900 border-b border-brand-dark flex flex-col justify-between p-6 relative overflow-hidden">
-              <span className="absolute right-0 bottom-0 text-zinc-950 font-heading text-[12rem] font-bold select-none leading-none pointer-events-none transform translate-y-12 translate-x-12">
-                HVY
-              </span>
-              <div className="flex justify-between items-start z-10">
-                <span className="bg-brand-gold text-brand-black text-xs font-bold uppercase tracking-widest px-2 py-0.5 font-mono">
-                  NEW
-                </span>
-                <span className="text-zinc-500 text-xs font-mono">CODE: VLNC-A02</span>
-              </div>
-              
-              <div className="self-center z-10 w-44 h-44 border border-brand-gold/20 flex items-center justify-center bg-brand-black/55 backdrop-blur shadow-2xl relative">
-                <div className="w-32 h-32 rotate-45 border-2 border-zinc-800"></div>
-                <div className="absolute font-mono text-zinc-600 text-[10px]">REINFORCED KEVLAR</div>
-              </div>
-
-              <div className="flex justify-between items-end z-10">
-                <span className="font-heading text-xl tracking-wide uppercase">Gold-Edition Anorak</span>
-              </div>
-            </div>
-            <div className="p-4">
-              <button className="btn-outlined w-full">
-                Add to Cart
-              </button>
-            </div>
-          </div>
+          ))}
         </div>
       </section>
 

@@ -20,7 +20,7 @@ const slides: Slide[] = [
     headline: 'DEFINE YOUR STREET',
     subheadline: 'Premium streetwear crafted for those who lead, not follow.',
     cta: 'SHOP STREET WEAR',
-    ctaHref: '/street-wear',
+    ctaHref: '#categories',
   },
   {
     id: 2,
