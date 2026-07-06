@@ -1,16 +1,16 @@
 export const SITE = {
   name: 'RED HEX INDUSTRIES',
-  phone: '+92 311 4903270',
-  phoneHref: 'tel:+923114903270',
-  email: 'info@zeynindustry.com',
+  phone: '+92 324 8084431',
+  phoneHref: 'tel:+923248084431',
+  email: 'info@redhex.com',
   address: {
     line1: '1234 Industrial Ave.',
     line2: 'Lahore, PK 54000',
     full: '1234 Industrial Ave., Lahore, PK 54000',
   },
   whatsapp: {
-    number: '923114903270',
-    href: 'https://wa.me/923114903270',
+    number: '923248084431',
+    href: 'https://wa.me/923248084431',
   },
   social: {
     twitter: '#',

@@ -511,7 +511,7 @@ export default function ProductPage({ params }: { params: { slug: string } }) {
 
               {/* Request a Quote */}
               <a
-                href={`https://wa.me/923114903270?text=Hi%2C%20I'm%20interested%20in%20${encodeURIComponent(product.name)}`}
+                href={`https://wa.me/923248084431?text=Hi%2C%20I'm%20interested%20in%20${encodeURIComponent(product.name)}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 style={{
