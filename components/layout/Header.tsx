@@ -120,7 +120,7 @@ const MEGA_MENUS: Record<string, MegaMenuCategory> = {
 // Component
 // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 export default function Header() {
-  const { data } = useQuery(GET_CART_QUANTITY, {
+  useQuery(GET_CART_QUANTITY, {
     fetchPolicy: 'cache-and-network',
   });
 
@@ -425,14 +425,7 @@ export default function Header() {
 
         {/* Drawer Footer */}
         <div className="border-t border-zinc-900 p-6 flex flex-col gap-3">
-          <a
-            href="/wishlist"
-            onClick={() => setIsDrawerOpen(false)}
-            className="flex items-center gap-3 text-xs text-zinc-400 hover:text-brand-white uppercase font-semibold tracking-wider transition-colors"
-          >
-            <Heart className="w-4 h-4 text-zinc-600" />
-            Wishlist
-          </a>
+
           <a
             href="/login"
             onClick={() => setIsDrawerOpen(false)}
