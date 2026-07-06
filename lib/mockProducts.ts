@@ -2051,6 +2051,138 @@ export const mockProducts: MockProduct[] = [
     subcategory: "t-shirts",
     images: ["https://res.cloudinary.com/ng5enocm/image/upload/v1783290193/ubecci9_2.jpg_lienxk.jpg"],
     sizes: ['M', 'L', 'XL']
+  },
+  {
+    id: "tr-01",
+    name: "Tracksuit 01",
+    slug: "tracksuit-01",
+    price: 0,
+    shortDescription: "Superior comfort tracksuit",
+    description: "This tracksuit is designed to provide superior comfort and flexibility for training, travel, and everyday wear. Made from premium-quality fabric, it offers a comfortable fit with lasting durability for active lifestyles.",
+    category: "casual-wear",
+    subcategory: "tracksuits",
+    images: ["https://res.cloudinary.com/ng5enocm/image/upload/v1783329006/image_47.jpg_uvtxca.jpg"],
+    sizes: ['M', 'L', 'XL']
+  },
+  {
+    id: "tr-02",
+    name: "Tracksuit 02",
+    slug: "tracksuit-02",
+    price: 0,
+    shortDescription: "Lightweight breathable tracksuit",
+    description: "Crafted from lightweight and breathable materials, this tracksuit delivers all-day comfort without compromising performance. Its modern design makes it suitable for workouts, outdoor activities, and casual wear.",
+    category: "casual-wear",
+    subcategory: "tracksuits",
+    images: ["https://res.cloudinary.com/ng5enocm/image/upload/v1783329009/image_48.jpg_fry1mv.jpg"],
+    sizes: ['M', 'L', 'XL']
+  },
+  {
+    id: "tr-03",
+    name: "Tracksuit 03",
+    slug: "tracksuit-03",
+    price: 0,
+    shortDescription: "Comfortable and durable tracksuit",
+    description: "This tracksuit combines comfort, durability, and functionality in a versatile design. The soft fabric provides a relaxed fit while allowing unrestricted movement throughout your daily routine.",
+    category: "casual-wear",
+    subcategory: "tracksuits",
+    images: ["https://res.cloudinary.com/ng5enocm/image/upload/v1783329013/image_49.jpg_z9k3vw.jpg"],
+    sizes: ['M', 'L', 'XL']
+  },
+  {
+    id: "tr-04",
+    name: "Tracksuit 04",
+    slug: "tracksuit-04",
+    price: 0,
+    shortDescription: "Athletic training tracksuit",
+    description: "Designed for athletes and fitness enthusiasts, this tracksuit features breathable fabric that promotes comfort during training sessions. Its durable construction ensures reliable performance for regular use.",
+    category: "casual-wear",
+    subcategory: "tracksuits",
+    images: ["https://res.cloudinary.com/ng5enocm/image/upload/v1783329018/image_50.jpg_lttbfd.jpg"],
+    sizes: ['M', 'L', 'XL']
+  },
+  {
+    id: "tr-05",
+    name: "Tracksuit 05",
+    slug: "tracksuit-05",
+    price: 0,
+    shortDescription: "High-quality versatile tracksuit",
+    description: "This tracksuit is manufactured using high-quality materials to provide lasting comfort and everyday versatility. The lightweight construction makes it an ideal choice for gym workouts, jogging, and casual outings.",
+    category: "casual-wear",
+    subcategory: "tracksuits",
+    images: ["https://res.cloudinary.com/ng5enocm/image/upload/v1783329022/image_52.jpg_cvosr5.jpg"],
+    sizes: ['M', 'L', 'XL']
+  },
+  {
+    id: "tr-06",
+    name: "Tracksuit 06",
+    slug: "tracksuit-06",
+    price: 0,
+    shortDescription: "Everyday performance tracksuit",
+    description: "Built for everyday performance, this tracksuit offers a comfortable fit with premium fabric that feels soft against the skin. Its durable craftsmanship makes it suitable for both sports and leisure activities.",
+    category: "casual-wear",
+    subcategory: "tracksuits",
+    images: ["https://res.cloudinary.com/ng5enocm/image/upload/v1783329027/image_54.jpg_jd0dsg.jpg"],
+    sizes: ['M', 'L', 'XL']
+  },
+  {
+    id: "tr-07",
+    name: "Tracksuit 07",
+    slug: "tracksuit-07",
+    price: 0,
+    shortDescription: "Flexible and dependable tracksuit",
+    description: "This tracksuit delivers dependable comfort with a flexible design that supports unrestricted movement. The breathable material helps maintain comfort throughout workouts, travel, and daily wear.",
+    category: "casual-wear",
+    subcategory: "tracksuits",
+    images: ["https://res.cloudinary.com/ng5enocm/image/upload/v1783329036/image_55.jpg_lgol3d.jpg"],
+    sizes: ['M', 'L', 'XL']
+  },
+  {
+    id: "tr-08",
+    name: "Tracksuit 08",
+    slug: "tracksuit-08",
+    price: 0,
+    shortDescription: "Stylish and functional tracksuit",
+    description: "Designed with style and functionality in mind, this tracksuit combines premium-quality fabric with durable construction for long-lasting performance. It is ideal for active individuals seeking comfort and versatility.",
+    category: "casual-wear",
+    subcategory: "tracksuits",
+    images: ["https://res.cloudinary.com/ng5enocm/image/upload/v1783329036/image_55.jpg_lgol3d.jpg"],
+    sizes: ['M', 'L', 'XL']
+  },
+  {
+    id: "tr-09",
+    name: "Tracksuit 09",
+    slug: "tracksuit-09",
+    price: 0,
+    shortDescription: "Comfortable and durable tracksuit",
+    description: "This tracksuit offers a perfect balance of comfort and durability for everyday use. The lightweight fabric and relaxed fit provide excellent flexibility for fitness routines and casual activities.",
+    category: "casual-wear",
+    subcategory: "tracksuits",
+    images: ["https://res.cloudinary.com/ng5enocm/image/upload/v1783329041/image_56.jpg_r0glqv.jpg"],
+    sizes: ['M', 'L', 'XL']
+  },
+  {
+    id: "tr-10",
+    name: "Tracksuit 10",
+    slug: "tracksuit-10",
+    price: 0,
+    shortDescription: "Modern active lifestyle tracksuit",
+    description: "This tracksuit is engineered to deliver reliable comfort and modern style for an active lifestyle. Featuring breathable fabric and quality stitching, it provides dependable performance throughout the day.",
+    category: "casual-wear",
+    subcategory: "tracksuits",
+    images: ["https://res.cloudinary.com/ng5enocm/image/upload/v1783329045/image_57.jpg_i3rdnm.jpg"],
+    sizes: ['M', 'L', 'XL']
+  },
+  {
+    id: "tr-11",
+    name: "Tracksuit 11",
+    slug: "tracksuit-11",
+    price: 0,
+    shortDescription: "Timeless and functional tracksuit",
+    description: "This tracksuit is designed for those who value comfort, durability, and everyday functionality. Its premium fabric, comfortable fit, and timeless design make it an excellent choice for training, travel, and casual wear.",
+    category: "casual-wear",
+    subcategory: "tracksuits",
+    images: ["https://res.cloudinary.com/ng5enocm/image/upload/v1783329050/image_58.jpg_w6evny.jpg"],
+    sizes: ['M', 'L', 'XL']
   }
 ];
 

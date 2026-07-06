@@ -99,8 +99,8 @@ export default function Footer() {
         {/* Logo & address */}
         <div>
           <div style={{ marginBottom: '1rem' }}>
-            {/* Placeholder logo */}
-            <img src="/logo.svg" alt="RED HEX INDUSTRIES" style={{ height: '32px' }} />
+            {/* Brand logo */}
+            <img src="/logo.png" alt="RED HEX INDUSTRIES" style={{ height: '48px' }} />
           </div>
           <p style={{ fontSize: '0.85rem', lineHeight: 1.6, color: 'rgba(255,255,255,0.7)' }}>
             1234 Industrial Ave.<br />
@@ -123,10 +123,9 @@ export default function Footer() {
         <div>
           <h4 style={{ fontSize: '1rem', fontWeight: 600, marginBottom: '1rem', color: '#ffffff' }}>POLICY</h4>
           <ul style={{ listStyle: 'none', padding: 0, margin: 0, marginBottom: '1.5rem' }}>
-            <li><a href="/privacy" style={linkStyle}>Privacy Policy</a></li>
-            <li><a href="/terms" style={linkStyle}>Terms of Service</a></li>
-            <li><a href="/shipping" style={linkStyle}>Shipping</a></li>
-            <li><a href="/returns" style={linkStyle}>Returns</a></li>
+            <li><a href="/privacy-policy" style={linkStyle}>Privacy Policy</a></li>
+            <li><a href="/terms-of-service" style={linkStyle}>Terms of Service</a></li>
+            <li><a href="/shipping-policy" style={linkStyle}>Shipping Policy</a></li>
           </ul>
           {/* Newsletter */}
           <form onSubmit={handleSubmit} style={{ display: 'flex', gap: '0.5rem' }}>

@@ -201,24 +201,7 @@ export default function Header() {
           {/* â”€â”€ Logo â”€â”€ */}
           <a href="/" className="flex items-center gap-2 leading-none select-none group">
             {/* Hexagon icon mark */}
-            <svg
-              width="32" height="32" viewBox="0 0 32 32"
-              className="flex-shrink-0 transition-transform duration-300 group-hover:rotate-[30deg]"
-              aria-hidden="true"
-            >
-              <polygon
-                points="16,2 29,9 29,23 16,30 3,23 3,9"
-                fill="#cc0000"
-                stroke="#ff2222"
-                strokeWidth="1"
-              />
-              <polygon
-                points="16,7 25,12 25,20 16,25 7,20 7,12"
-                fill="none"
-                stroke="rgba(255,255,255,0.25)"
-                strokeWidth="0.8"
-              />
-            </svg>
+            <img src="/logo.png" alt="RedHex Logo" className="w-8 h-8 flex-shrink-0 transition-transform duration-300 group-hover:rotate-[30deg]" />
 
             {/* Word-mark */}
             <span className="font-heading leading-none tracking-widest">
@@ -372,10 +355,7 @@ export default function Header() {
           {/* Drawer Header */}
           <div className="flex justify-between items-center pb-6 border-b border-zinc-900">
             <a href="/" className="flex items-center gap-2 leading-none" onClick={() => setIsDrawerOpen(false)}>
-              <svg width="26" height="26" viewBox="0 0 32 32" aria-hidden="true">
-                <polygon points="16,2 29,9 29,23 16,30 3,23 3,9" fill="#cc0000" stroke="#ff2222" strokeWidth="1" />
-                <polygon points="16,7 25,12 25,20 16,25 7,20 7,12" fill="none" stroke="rgba(255,255,255,0.2)" strokeWidth="0.8" />
-              </svg>
+              <img src="/logo.png" alt="RedHex Logo" className="w-6 h-6" />
               <span className="font-heading leading-none">
                 <span style={{ color: '#cc0000', fontSize: '0.95rem', fontWeight: 900, letterSpacing: '0.06em' }}>RED HEX</span>
                 {' '}
