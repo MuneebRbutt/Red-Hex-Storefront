@@ -196,12 +196,13 @@ export default function CollectionClient({
                         style={cardStyle}
                         className="product-card-hover"
                       >
-                        <Link href={`/products/${item.product.slug}`} style={{ display: 'block', overflow: 'hidden', aspectRatio: '3/4', position: 'relative', backgroundColor: '#1a1a1a' }}>
+                        <Link href={`/products/${item.product.slug}`} className="block relative w-full overflow-hidden bg-[#111111] h-[280px] md:h-[320px]">
                           <img
                             src={img1}
                             alt={item.name}
                             style={{
                               width: '100%', height: '100%', objectFit: 'contain', objectPosition: 'center',
+                              padding: '16px', backgroundColor: '#111111',
                               transition: 'transform 0.4s ease',
                             }}
                             className="product-card-img primary-img"
@@ -212,6 +213,7 @@ export default function CollectionClient({
                               alt={`${item.name} alternate view`}
                               style={{
                                 position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'contain', objectPosition: 'center',
+                                padding: '16px', backgroundColor: '#111111',
                                 opacity: 0, transition: 'opacity 0.4s ease',
                               }}
                               className="secondary-img"
