@@ -1,7 +1,6 @@
 import React from 'react';
 import HeroSlider from '@/components/home/HeroSlider';
 import CategoryGrid from '@/components/home/CategoryGrid';
-import ProductTabs from '@/components/home/ProductTabs';
 import { mockProducts } from '@/lib/mockProducts';
 import Link from 'next/link';
 
@@ -40,8 +39,7 @@ export default function Home() {
       {/* Category Grid */}
       <CategoryGrid />
 
-      {/* Product Tabs */}
-      <ProductTabs />
+
 
       {/* About / CEO Section */}
       <AboutSection />
