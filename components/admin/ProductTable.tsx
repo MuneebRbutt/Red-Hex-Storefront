@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useEffect, useMemo, useState } from 'react';
 import { adminClientFetch } from '@/lib/admin/client';
+import { isTanauraProduct } from '@/lib/categories';
 
 type ProductRow = {
   id: string;
@@ -12,7 +13,7 @@ type ProductRow = {
   description?: string;
   featuredAsset?: { preview?: string } | null;
   variants: Array<{ id: string; price?: number | null; stockOnHand?: number | null }>;
-  collections?: Array<{ id: string; name: string }>;
+  collections?: Array<{ id: string; name: string; slug: string }>;
 };
 
 const PRODUCTS_QUERY = `
@@ -24,7 +25,7 @@ query AdminProductsList {
       slug
       description
       featuredAsset { preview }
-      collections { id name }
+      collections { id name slug }
       variants { id price stockOnHand }
     }
   }
@@ -56,7 +57,7 @@ export default function ProductTable() {
     try {
       setError('');
       const data = await adminClientFetch<{ products: { items: ProductRow[] } }>(PRODUCTS_QUERY);
-      setItems(data.products.items);
+      setItems(data.products.items.filter(isTanauraProduct));
     } catch (err) {
       const msg = (err as Error).message;
       if (msg === 'UNAUTHORIZED') router.push('/admin/login');

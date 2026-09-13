@@ -1,5 +1,6 @@
 'use client';
 
+import { CATEGORIES as GLOVE_CATEGORIES } from '@/lib/categories';
 import { FormEvent, useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { assignProductToCollection, assignProductToDefaultChannel } from '@/lib/admin/assignProductToCollection';
@@ -51,64 +52,7 @@ mutation UpdateProductVariant($input: UpdateProductVariantInput!) {
 
 const SIZES = ['XS', 'S', 'M', 'L', 'XL', 'XXL'];
 
-const CATEGORIES = [
-  {
-    id: "sportswear",
-    name: "Sportswear",
-    slug: "sportswear",
-    subcategories: [
-      { id: "soccer-uniform", name: "Soccer Uniform", slug: "soccer-uniform" },
-      { id: "baseball-uniform", name: "Baseball Uniform", slug: "baseball-uniform" },
-      { id: "american-football-uniform", name: "American Football Uniform", slug: "american-football-uniform" },
-      { id: "basketball-uniform", name: "Basketball Uniform", slug: "basketball-uniform" },
-      { id: "ice-hockey-uniform", name: "Ice Hockey Uniform", slug: "ice-hockey-uniform" },
-      { id: "tennis-uniform", name: "Tennis Uniform", slug: "tennis-uniform" }
-    ]
-  },
-  {
-    id: "casual-wear",
-    name: "Casual Wear",
-    slug: "casual-wear",
-    subcategories: [
-      { id: "tracksuits", name: "Tracksuits", slug: "tracksuits" },
-      { id: "hoodies", name: "Hoodies", slug: "hoodies" },
-      { id: "sweatshirt", name: "Sweatshirt", slug: "sweatshirt" },
-      { id: "sweat-pants", name: "Sweat Pants", slug: "sweat-pants" },
-      { id: "t-shirts", name: "T-Shirts", slug: "t-shirts" }
-    ]
-  },
-  {
-    id: "jacket-collections",
-    name: "Jacket Collections",
-    slug: "jacket-collections",
-    subcategories: []
-  },
-  {
-    id: "gymwear-activewear",
-    name: "Gymwear & Activewear",
-    slug: "gymwear-activewear",
-    subcategories: [
-      { id: "tank-top", name: "Tank Top", slug: "tank-top" },
-      { id: "compression-shirts", name: "Compression Shirts", slug: "compression-shirts" },
-      { id: "dry-fit-t-shirts", name: "Dry-Fit T-Shirts", slug: "dry-fit-t-shirts" },
-      { id: "gym-shorts", name: "Gym Shorts", slug: "gym-shorts" },
-      { id: "track-jackets", name: "Track Jackets", slug: "track-jackets" },
-      { id: "wrist-straps", name: "Wrist Straps", slug: "wrist-straps" },
-      { id: "headbands", name: "Headbands", slug: "headbands" },
-      { id: "gym-socks", name: "Gym Socks", slug: "gym-socks" }
-    ]
-  },
-  {
-    id: "safety-work-wear",
-    name: "Safety & Work Wear",
-    slug: "safety-work-wear",
-    subcategories: [
-      { id: "safety-vests", name: "Safety Vests", slug: "safety-vests" },
-      { id: "construction-suits", name: "Construction Suits", slug: "construction-suits" },
-      { id: "safety-jackets", name: "Safety Jackets", slug: "safety-jackets" }
-    ]
-  }
-];
+const CATEGORIES = GLOVE_CATEGORIES.map(c => ({ ...c, id: c.slug, subcategories: [] as { id: string; name: string; slug: string }[] }));
 
 export default function ProductForm({ productId }: { productId?: string }) {
   const router = useRouter();
@@ -133,7 +77,7 @@ export default function ProductForm({ productId }: { productId?: string }) {
   const mainCategories = categories;
   const selectedCategory = categories.find(c => c.id === categoryId);
   const subcategories = selectedCategory?.subcategories || [];
-  const isJacketCollections = selectedCategory?.id === 'jacket-collections';
+  const hasSubcategories = subcategories.length > 0;
 
   useEffect(() => {
     if (!editing) return;
@@ -172,7 +116,7 @@ export default function ProductForm({ productId }: { productId?: string }) {
     const formData = new FormData();
     formData.append('file', file);
     formData.append('upload_preset', process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET!);
-    formData.append('folder', 'red-hex-industries');
+    formData.append('folder', 'tanaura');
     
     const res = await fetch(
       `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload`,
@@ -334,7 +278,7 @@ export default function ProductForm({ productId }: { productId?: string }) {
     setError('');
     setSuccess('');
 
-    if (categoryId && !isJacketCollections && !subcategoryId) {
+    if (categoryId && hasSubcategories && !subcategoryId) {
       setError('Please select a subcategory');
       setLoading(false);
       return;
@@ -453,7 +397,7 @@ export default function ProductForm({ productId }: { productId?: string }) {
             ))}
           </select>
         </div>
-        {!isJacketCollections ? (
+        {hasSubcategories ? (
           <div className="space-y-1">
             <label className="text-sm font-medium">Subcategory</label>
             <select
@@ -473,7 +417,7 @@ export default function ProductForm({ productId }: { productId?: string }) {
           <div className="space-y-1">
             <label className="text-sm font-medium">Subcategory</label>
             <div className="w-full rounded border px-3 py-2 bg-gray-50 text-sm text-gray-500">
-              Products will be added directly to Jacket Collections
+              Products will be added directly to the selected glove category
             </div>
           </div>
         )}

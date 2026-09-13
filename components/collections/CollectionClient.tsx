@@ -1,5 +1,6 @@
 'use client';
 
+import { CATEGORIES } from '@/lib/categories';
 import React, { useState, useMemo } from 'react';
 import { useQuery } from '@apollo/client/react';
 import { gql } from 'graphql-tag';
@@ -9,58 +10,9 @@ import Footer from '@/components/layout/Footer';
 // ─────────────────────────────────────────────────────────────────────────────
 // Category configurations and subcategory mapping
 // ─────────────────────────────────────────────────────────────────────────────
-const CATEGORY_MAP: Record<string, { label: string; subs: string[] }> = {
-  'sportswear': {
-    label: 'SPORTSWEAR',
-    subs: ['soccer-uniform', 'baseball-uniform', 'american-football-uniform', 'basketball-uniform', 'ice-hockey-uniform', 'tennis-uniform'],
-  },
-  'casual-wear': {
-    label: 'CASUAL WEAR',
-    subs: ['tracksuits', 'hoodies', 'sweatshirt', 'sweat-pants', 't-shirts'],
-  },
-  'jacket-collections': {
-    label: 'JACKET COLLECTIONS',
-    subs: [],
-  },
-  'gymwear-activewear': {
-    label: 'GYMWEAR & ACTIVEWEAR',
-    subs: ['tank-top', 'compression-shirts', 'dry-fit-t-shirts', 'gym-shorts', 'track-jackets', 'wrist-straps', 'headbands', 'gym-socks'],
-  },
-  'safety-work-wear': {
-    label: 'SAFETY & WORK WEAR',
-    subs: ['safety-vests', 'construction-suits', 'safety-jackets'],
-  },
-};
+const CATEGORY_MAP: Record<string, { label: string; subs: string[] }> = Object.fromEntries(CATEGORIES.map(c => [c.slug, { label: c.name, subs: [] }]));
 
-const SUBCAT_TO_PARENT: Record<string, { parentSlug: string; parentLabel: string; label: string }> = {
-  'soccer-uniform': { parentSlug: 'sportswear', parentLabel: 'SPORTSWEAR', label: 'Soccer Uniform' },
-  'baseball-uniform': { parentSlug: 'sportswear', parentLabel: 'SPORTSWEAR', label: 'Baseball Uniform' },
-  'american-football-uniform': { parentSlug: 'sportswear', parentLabel: 'SPORTSWEAR', label: 'American Football Uniform' },
-  'basketball-uniform': { parentSlug: 'sportswear', parentLabel: 'SPORTSWEAR', label: 'Basketball Uniform' },
-  'ice-hockey-uniform': { parentSlug: 'sportswear', parentLabel: 'SPORTSWEAR', label: 'Ice Hockey Uniform' },
-  'tennis-uniform': { parentSlug: 'sportswear', parentLabel: 'SPORTSWEAR', label: 'Tennis Uniform' },
-  
-  'tracksuits': { parentSlug: 'casual-wear', parentLabel: 'CASUAL WEAR', label: 'Tracksuits' },
-  'hoodies': { parentSlug: 'casual-wear', parentLabel: 'CASUAL WEAR', label: 'Hoodies' },
-  'sweatshirt': { parentSlug: 'casual-wear', parentLabel: 'CASUAL WEAR', label: 'Sweatshirt' },
-  'sweat-pants': { parentSlug: 'casual-wear', parentLabel: 'CASUAL WEAR', label: 'Sweat Pants' },
-  't-shirts': { parentSlug: 'casual-wear', parentLabel: 'CASUAL WEAR', label: 'T-Shirts' },
-  
-
-  
-  'tank-top': { parentSlug: 'gymwear-activewear', parentLabel: 'GYMWEAR & ACTIVEWEAR', label: 'Tank Top' },
-  'compression-shirts': { parentSlug: 'gymwear-activewear', parentLabel: 'GYMWEAR & ACTIVEWEAR', label: 'Compression Shirts' },
-  'dry-fit-t-shirts': { parentSlug: 'gymwear-activewear', parentLabel: 'GYMWEAR & ACTIVEWEAR', label: 'Dry-Fit T-Shirts' },
-  'gym-shorts': { parentSlug: 'gymwear-activewear', parentLabel: 'GYMWEAR & ACTIVEWEAR', label: 'Gym Shorts' },
-  'track-jackets': { parentSlug: 'gymwear-activewear', parentLabel: 'GYMWEAR & ACTIVEWEAR', label: 'Track Jackets' },
-  'wrist-straps': { parentSlug: 'gymwear-activewear', parentLabel: 'GYMWEAR & ACTIVEWEAR', label: 'Wrist Straps' },
-  'headbands': { parentSlug: 'gymwear-activewear', parentLabel: 'GYMWEAR & ACTIVEWEAR', label: 'Headbands' },
-  'gym-socks': { parentSlug: 'gymwear-activewear', parentLabel: 'GYMWEAR & ACTIVEWEAR', label: 'Gym Socks' },
-  
-  'safety-vests': { parentSlug: 'safety-work-wear', parentLabel: 'SAFETY & WORK WEAR', label: 'Safety Vests' },
-  'construction-suits': { parentSlug: 'safety-work-wear', parentLabel: 'SAFETY & WORK WEAR', label: 'Construction Suits' },
-  'safety-jackets': { parentSlug: 'safety-work-wear', parentLabel: 'SAFETY & WORK WEAR', label: 'Safety Jackets' },
-};
+const SUBCAT_TO_PARENT: Record<string, { parentSlug: string; parentLabel: string; label: string }> = {};
 
 function formatPrice(cents: number) {
   return `$${(cents / 100).toFixed(2)}`;
@@ -90,7 +42,7 @@ export default function CollectionClient({
   const currentLabel = isSubcategory ? subcatInfo.label : parentLabel;
 
   const collectionName = serverCollectionName || currentLabel;
-  const collectionDesc = serverCollectionDesc || `Premium quality gear and apparel from our ${currentLabel} collection.`;
+  const collectionDesc = serverCollectionDesc || `Explore gloves from our ${currentLabel} collection.`;
 
   const variants = initialVariants;
 
@@ -119,7 +71,7 @@ export default function CollectionClient({
             fontFamily: "'Inter', sans-serif", fontSize: '0.65rem', fontWeight: 700,
             color: '#cc0000', letterSpacing: '0.35em', textTransform: 'uppercase',
           }}>
-            RED HEX INDUSTRIES / COLLECTION
+            TANAURA / COLLECTION
           </span>
           <h1 style={{
             fontFamily: "'Oswald', sans-serif", fontSize: 'clamp(2.5rem, 5vw, 4rem)',
@@ -167,7 +119,7 @@ export default function CollectionClient({
                 <span style={{ fontSize: '2.5rem', marginBottom: '0.5rem' }}>📢</span>
                 <h3 style={{ fontFamily: "'Oswald', sans-serif", fontSize: '1.8rem', color: '#ffffff', letterSpacing: '0.05em', margin: '0 0 0.5rem' }}>COMING SOON</h3>
                 <p style={{ fontFamily: "'Inter', sans-serif", fontSize: '0.88rem', color: 'rgba(255,255,255,0.45)', margin: 0, maxWidth: '420px', lineHeight: 1.6 }}>
-                  Our designers are stitching the finishing details on the {currentLabel} line. Sign up for the newsletter below to get first access when it drops.
+                  Our {currentLabel} collection is coming soon. Product details and images will be added shortly.
                 </p>
               </div>
             ) : (

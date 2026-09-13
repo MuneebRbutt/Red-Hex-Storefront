@@ -15,7 +15,7 @@ export async function POST(request: Request) {
 
     // Prepare console logs as a simulated email delivery
     console.log('==================================================');
-    console.log('✉️ NEW CART ENQUIRY RECEIVED (RED HEX INDUSTRIES)');
+    console.log('✉️ NEW CART ENQUIRY RECEIVED (TANAURA)');
     console.log('==================================================');
     console.log(`From: ${customer.name} <${customer.email}>`);
     if (customer.phone) console.log(`Phone: ${customer.phone}`);

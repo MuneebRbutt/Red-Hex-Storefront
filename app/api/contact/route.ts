@@ -13,7 +13,7 @@ export async function POST(request: Request) {
     }
 
     console.log('==================================================');
-    console.log('✉️ NEW CONTACT FORM SUBMISSION (RED HEX INDUSTRIES)');
+    console.log('✉️ NEW CONTACT FORM SUBMISSION (TANAURA)');
     console.log('==================================================');
     console.log(`From: ${name} <${email}>`);
     if (phone) console.log(`Phone: ${phone}`);

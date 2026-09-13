@@ -56,15 +56,16 @@ export default function Home() {
       <section className="py-24 px-6 max-w-7xl mx-auto">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-16 gap-4">
           <div>
-            <h2 className="font-heading text-4xl tracking-tight mb-2">Featured Garments</h2>
-            <p className="text-zinc-400">Premium releases engineered for daily industrial tasks.</p>
+            <h2 className="font-heading text-4xl tracking-tight mb-2">Tanaura Gloves</h2>
+            <p className="text-zinc-400">Our new glove collection is coming soon.</p>
           </div>
-          <a href="#" className="font-heading text-brand-gold hover:text-brand-white border-b border-brand-gold hover:border-brand-white transition-all tracking-wider text-lg pb-1 uppercase">
-            View All Products &rarr;
+          <a href="#categories" className="font-heading text-brand-gold hover:text-brand-white border-b border-brand-gold hover:border-brand-white transition-all tracking-wider text-lg pb-1 uppercase">
+            Explore Categories &rarr;
           </a>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
+          {featuredProducts.length === 0 && <div className="col-span-full border border-brand-gold/20 bg-[#111111] p-12 text-center"><h3 className="font-heading text-2xl text-brand-gold mb-3">New products coming soon</h3><p className="text-zinc-400">Explore our seven glove categories. Product details and images will be available soon.</p></div>}
           {featuredProducts.map((product) => (
             <div key={product.id || product.slug} className="border border-brand-dark bg-[#111111] flex flex-col group transition-all duration-300 hover:border-zinc-600">
               <Link href={`/products/${product.slug}`} className="block relative w-full overflow-hidden bg-white h-[260px]">

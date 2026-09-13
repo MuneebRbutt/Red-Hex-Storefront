@@ -1,5 +1,6 @@
 'use client';
 
+import { isTanauraProduct } from '@/lib/categories';
 import React, { useState, useMemo } from 'react';
 import { useQuery } from '@apollo/client/react';
 import { gql } from 'graphql-tag';
@@ -18,6 +19,7 @@ const GET_PRODUCT = gql`
       name
       description
       slug
+      collections { slug }
       featuredAsset { preview }
       assets { preview }
       variants {
@@ -39,7 +41,8 @@ const GET_RELATED = gql`
         name
         slug
         description
-        featuredAsset { preview }
+        collections { slug }
+      featuredAsset { preview }
         variants { priceWithTax }
       }
     }
@@ -70,12 +73,7 @@ const extractImageUrl = (description: string) => {
 // ─────────────────────────────────────────────────────────────────────────────
 // Fallback images (Unsplash, always available)
 // ─────────────────────────────────────────────────────────────────────────────
-const FALLBACK_IMAGES = [
-  'https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=800&q=85',
-  'https://images.unsplash.com/photo-1512436991641-6745cdb1723f?w=800&q=85',
-  'https://images.unsplash.com/photo-1517836357463-d25dfeac3438?w=800&q=85',
-  'https://images.unsplash.com/photo-1551028719-00167b16eac5?w=800&q=85',
-];
+const FALLBACK_IMAGES = ['/tanaura-icon.svg'];
 
 // Convert MockProduct into same shape as GraphQL product
 function mockToProduct(m: MockProduct) {
@@ -133,7 +131,7 @@ export default function ProductPage({ params }: { params: { slug: string } }) {
 
   // ── Resolve product: real data first, then mock fallback ──────────────────
   const product = useMemo(() => {
-    if ((data as any)?.product) return (data as any).product;
+    if ((data as any)?.product && isTanauraProduct((data as any).product)) return (data as any).product;
     const mockMatch = MOCK_PRODUCTS.find(p => p.slug === slug);
     if (mockMatch) return mockToProduct(mockMatch);
     return null;
@@ -159,7 +157,7 @@ export default function ProductPage({ params }: { params: { slug: string } }) {
   const relatedProducts: RelatedProduct[] = useMemo(() => {
     const gqlItems = ((relatedData as any)?.products?.items || []) as any[];
     return gqlItems
-      .filter((p: any) => p.slug !== slug)
+      .filter((p: any) => p.slug !== slug && isTanauraProduct(p))
       .slice(0, 4)
       .map((p: any) => {
         const cloudinaryUrl = extractImageUrl(p.description || '');
@@ -336,7 +334,7 @@ export default function ProductPage({ params }: { params: { slug: string } }) {
           <div style={{ display: 'flex', flexDirection: 'column', gap: '1.75rem' }}>
             {/* Brand label */}
             <span style={{ fontFamily: "'Inter',sans-serif", fontSize: '0.65rem', fontWeight: 700, color: '#cc0000', letterSpacing: '0.3em', textTransform: 'uppercase' }}>
-              RED HEX INDUSTRIES
+              TANAURA
             </span>
 
             {/* Product Name */}
@@ -392,7 +390,7 @@ export default function ProductPage({ params }: { params: { slug: string } }) {
                     // mock descriptions can contain HTML — strip tags for the short blurb
                     ? product.description.replace(/<[^>]+>/g, ' ').trim()
                     : product.description.replace(/\{"_imageUrl":"[^"]+"\}/g, '').trim())
-                  : 'Premium quality garment crafted to the highest manufacturing standards by RED HEX INDUSTRIES. Designed for performance, built to last.'}
+                  : 'Premium quality garment crafted to the highest manufacturing standards by TANAURA. Designed for performance, built to last.'}
               </p>
             </div>
 
@@ -630,7 +628,7 @@ export default function ProductPage({ params }: { params: { slug: string } }) {
                     : <p>{product.description.replace(/\{"_imageUrl":"[^"]+"\}/g, '').trim()}</p>)
                 : (
                   <p>
-                    Premium quality garment crafted to the highest manufacturing standards by RED HEX INDUSTRIES.
+                    Premium quality garment crafted to the highest manufacturing standards by TANAURA.
                     Each piece is individually quality-checked before dispatch to ensure consistent excellence.
                     Designed for performance, built to last through rigorous use and repeated washing.
                   </p>
@@ -670,7 +668,7 @@ export default function ProductPage({ params }: { params: { slug: string } }) {
           )}
           {activeTab === 'shipping' && (
             <div>
-              <p style={{ marginTop: 0 }}>RED HEX INDUSTRIES ships worldwide. Here are our standard shipping options:</p>
+              <p style={{ marginTop: 0 }}>TANAURA ships worldwide. Here are our standard shipping options:</p>
               <ul style={{ paddingLeft: '1.25rem', display: 'flex', flexDirection: 'column', gap: '0.6rem' }}>
                 <li><strong style={{ color: '#fff' }}>Standard Shipping</strong> – 7–14 business days (tracked)</li>
                 <li><strong style={{ color: '#fff' }}>Express Shipping</strong> – 3–5 business days (tracked + priority)</li>

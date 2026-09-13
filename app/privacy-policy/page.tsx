@@ -2,8 +2,8 @@ import React from 'react';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Privacy Policy | RedHex Industries',
-  description: 'Privacy Policy for RedHex Industries',
+  title: 'Privacy Policy | Tanaura Leather & Safety Gloves',
+  description: 'Privacy Policy for Tanaura Leather & Safety Gloves',
 };
 
 export default function PrivacyPolicyPage() {
@@ -32,7 +32,7 @@ export default function PrivacyPolicyPage() {
           <p>We implement a variety of security measures to maintain the safety of your personal information when you place an order or enter, submit, or access your personal information.</p>
 
           <h2>6. Contact Us</h2>
-          <p>If you have any questions about this Privacy Policy, please contact us at support@redhex.com.</p>
+          <p>If you have any questions about this Privacy Policy, please contact us through our contact page.</p>
         </div>
       </div>
     </div>

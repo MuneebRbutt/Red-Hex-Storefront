@@ -19,10 +19,10 @@ const oswald = Oswald({
 });
 
 export const metadata: Metadata = {
-  title: "RedHex Industries",
-  description: "E-commerce store for RedHex Industries",
+  title: "Tanaura Leather & Safety Gloves",
+  description: "Explore Tanaura welding, golf, mechanic, driver, Canadian rigger, assembly, and fashion driver gloves.",
   icons: {
-    icon: "/logo.png",
+    icon: "/tanaura-icon.svg",
   },
 };
 

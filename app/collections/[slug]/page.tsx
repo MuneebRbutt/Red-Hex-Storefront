@@ -1,3 +1,5 @@
+import { notFound } from 'next/navigation';
+import { CATEGORIES } from '@/lib/categories';
 import React from 'react';
 import CollectionClient from '@/components/collections/CollectionClient';
 import { MOCK_PRODUCTS } from '@/lib/mockProducts';
@@ -6,51 +8,21 @@ import { MOCK_PRODUCTS } from '@/lib/mockProducts';
 // Static parameter pre-generation definition (Server Component side)
 // ─────────────────────────────────────────────────────────────────────────────
 export function generateStaticParams() {
-  return [
-    // Main category slugs
-    { slug: 'sportswear' },
-    { slug: 'casual-wear' },
-    { slug: 'jacket-collections' },
-    { slug: 'gymwear-activewear' },
-    { slug: 'safety-work-wear' },
-    // Sportswear subcategories
-    { slug: 'soccer-uniform' },
-    { slug: 'baseball-uniform' },
-    { slug: 'american-football-uniform' },
-    { slug: 'basketball-uniform' },
-    { slug: 'ice-hockey-uniform' },
-    { slug: 'tennis-uniform' },
-    // Casual Wear subcategories
-    { slug: 'tracksuits' },
-    { slug: 'hoodies' },
-    { slug: 'sweatshirt' },
-    { slug: 'sweat-pants' },
-    { slug: 't-shirts' },
-    // Gymwear & Activewear subcategories
-    { slug: 'tank-top' },
-    { slug: 'compression-shirts' },
-    { slug: 'dry-fit-t-shirts' },
-    { slug: 'gym-shorts' },
-    { slug: 'track-jackets' },
-    { slug: 'wrist-straps' },
-    { slug: 'headbands' },
-    { slug: 'gym-socks' },
-    // Safety & Work Wear subcategories
-    { slug: 'safety-vests' },
-    { slug: 'construction-suits' },
-    { slug: 'safety-jackets' },
-  ];
+  return CATEGORIES.map(category => ({ slug: category.slug }));
 }
 
 
 export default async function CollectionPage({ params }: { params: { slug: string } }) {
+  const category = CATEGORIES.find(item => item.slug === params.slug);
+  if (!category) notFound();
   let liveVariants = [];
-  let collectionName = '';
-  let collectionDesc = '';
+  let collectionName: string = category.name;
+  let collectionDesc: string = category.description;
 
   try {
-    const res = await fetch('https://red-hex-backend.onrender.com/shop-api', {
+    const res = await fetch(process.env.NEXT_PUBLIC_VENDURE_SHOP_API || 'http://localhost:3000/shop-api', {
       method: 'POST',
+      signal: AbortSignal.timeout(5000),
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         query: `
@@ -132,22 +104,6 @@ export default async function CollectionPage({ params }: { params: { slug: strin
           assets: m.images.map(img => ({ preview: img }))
         }
       }));
-    } else {
-      initialVariants = [
-        {
-          id: 'mock-1',
-          name: 'Coming Soon: Premium Gear',
-          priceWithTax: 5999,
-          product: {
-            id: 'mock-prod-1',
-            name: 'Coming Soon: Premium Gear',
-            slug: 'coming-soon-premium-gear',
-            description: 'Our latest collection is currently in production.',
-            featuredAsset: { preview: 'https://placehold.co/600x800/1a1a1a/ffffff?text=Coming+Soon' },
-            assets: []
-          }
-        }
-      ];
     }
   }
 

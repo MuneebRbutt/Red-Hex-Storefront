@@ -1,5 +1,6 @@
 'use client';
 
+import Brand from './Brand';
 import React, { useState } from 'react';
 // Simple custom SVG components to prevent runtime errors from outdated lucide-react versions
 function TwitterIcon() {
@@ -100,13 +101,13 @@ export default function Footer() {
         <div>
           <div style={{ marginBottom: '1rem' }}>
             {/* Brand logo */}
-            <img src="/logo.png" alt="RED HEX INDUSTRIES" style={{ height: '48px' }} />
+            <Brand />
           </div>
           <p style={{ fontSize: '0.85rem', lineHeight: 1.6, color: 'rgba(255,255,255,0.7)' }}>
             1234 Industrial Ave.<br />
             Lahore, PK 54000<br />
             Phone: +92 324 8084431<br />
-            Email: info@redhex.com
+            <a href="/contact" style={linkStyle}>Contact Tanaura</a>
           </p>
         </div>
         {/* MENU links */}
@@ -114,7 +115,7 @@ export default function Footer() {
           <h4 style={{ fontSize: '1rem', fontWeight: 600, marginBottom: '1rem', color: '#ffffff' }}>MENU</h4>
           <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
             <li><a href="/" style={linkStyle}>Home</a></li>
-            <li><a href="/collections" style={linkStyle}>Collections</a></li>
+            <li><a href="/#categories" style={linkStyle}>Collections</a></li>
             <li><a href="/about" style={linkStyle}>About</a></li>
             <li><a href="/contact" style={linkStyle}>Contact</a></li>
           </ul>
@@ -178,7 +179,7 @@ export default function Footer() {
           <img src="https://placehold.co/40x24/555555/ffffff?text=PAYPAL" alt="PayPal" />
         </div>
         <p style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.5)', margin: 0 }}>
-          © 2026 RED HEX INDUSTRIES - All Copyright reserved
+          © 2026 TANAURA - All Copyright reserved
         </p>
       </div>
 
