@@ -3,20 +3,9 @@
 import Brand from './Brand';
 import { CATEGORIES } from '@/lib/categories';
 import React, { useState, useEffect } from 'react';
-import { useQuery } from '@apollo/client/react';
-import { gql } from 'graphql-tag';
 import { ShoppingCart, User, Menu, X, ChevronDown, ChevronRight } from 'lucide-react';
 import { useCart } from '@/lib/cartContext';
 import CartSidebar from '@/components/cart/CartSidebar';
-
-const GET_CART_QUANTITY = gql`
-  query GetCartQuantity {
-    activeOrder {
-      id
-      totalQuantity
-    }
-  }
-`;
 
 // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 // Navigation Data â€” TANAURA
@@ -40,10 +29,6 @@ const MEGA_MENUS: Record<string, MegaMenuCategory> = {};
 // Component
 // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 export default function Header() {
-  useQuery(GET_CART_QUANTITY, {
-    fetchPolicy: 'cache-and-network',
-  });
-
   const { totalItems, openSidebar } = useCart();
 
   const [isSticky, setIsSticky]                               = useState(false);
@@ -337,4 +322,3 @@ export default function Header() {
     </>
   );
 }
-

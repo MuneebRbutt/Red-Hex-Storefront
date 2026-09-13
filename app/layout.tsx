@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Inter, Oswald } from "next/font/google";
 import "@/styles/globals.css";
-import { ApolloWrapper } from "@/app/ApolloProvider";
 import { CartProvider } from "@/lib/cartContext";
 import AppShell from "@/components/layout/AppShell";
 
@@ -36,11 +35,9 @@ export default function RootLayout({
       <body
         className={`${inter.variable} ${oswald.variable} antialiased`}
       >
-        <ApolloWrapper>
-          <CartProvider>
-            <AppShell>{children}</AppShell>
-          </CartProvider>
-        </ApolloWrapper>
+        <CartProvider>
+          <AppShell>{children}</AppShell>
+        </CartProvider>
       </body>
     </html>
   );
