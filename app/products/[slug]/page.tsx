@@ -102,7 +102,7 @@ export default function ProductPage({ params }: { params: { slug: string } }) {
             ADD TO ENQUIRY
           </button>
           <a
-            href={`https://wa.me/923248084431?text=${encodeURIComponent(`Hello, I am interested in ${product.name}.`)}`}
+            href={`https://wa.me/923222993833?text=${encodeURIComponent(`Hello, I am interested in ${product.name}.`)}`}
             target="_blank"
             rel="noreferrer"
             className="mt-3 w-full border border-green-700 px-6 py-4 text-center text-sm font-bold tracking-wider text-green-400 hover:bg-green-950"

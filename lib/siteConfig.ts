@@ -1,7 +1,7 @@
 export const SITE = {
   name: 'Tanaura Leather & Safety Gloves',
-  phone: '+92 324 8084431',
-  phoneHref: 'tel:+923248084431',
+  phone: '+92 322 2993833',
+  phoneHref: 'tel:+923222993833',
   email: '',
   address: {
     line1: '1234 Industrial Ave.',
@@ -9,8 +9,8 @@ export const SITE = {
     full: '1234 Industrial Ave., Lahore, PK 54000',
   },
   whatsapp: {
-    number: '923248084431',
-    href: 'https://wa.me/923248084431',
+    number: '923222993833',
+    href: 'https://wa.me/923222993833',
   },
   social: {
     twitter: '#',

@@ -106,7 +106,7 @@ export default function Footer() {
           <p style={{ fontSize: '0.85rem', lineHeight: 1.6, color: 'rgba(255,255,255,0.7)' }}>
             1234 Industrial Ave.<br />
             Lahore, PK 54000<br />
-            Phone: +92 324 8084431<br />
+            Phone: +92 322 2993833<br />
             <a href="/contact" style={linkStyle}>Contact Tanaura</a>
           </p>
         </div>

@@ -1,4 +1,5 @@
 import HeroSlider from '@/components/home/HeroSlider';
+import ProductionVideo from '@/components/home/ProductionVideo';
 import CategoryGrid from '@/components/home/CategoryGrid';
 import Footer from '@/components/layout/Footer';
 import StatsSection from '@/components/home/StatsSection';
@@ -11,6 +12,9 @@ export default function Home() {
 
       {/* Hero Slider */}
       <HeroSlider />
+
+      {/* Production Setup & Quality Video */}
+      <ProductionVideo />
 
       {/* Category Grid */}
       <CategoryGrid />
